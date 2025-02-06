@@ -1,0 +1,119 @@
+.wrapper {
+  $font-size: 1.2rem;
+  width: 100%;
+  overflow: hidden;
+  padding-top: 5px;
+
+  nav {
+    position: relative;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    border-bottom: 2px solid var(--disabled-text);
+
+    ul {
+      overflow: hidden;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+      width: fit-content;
+      
+      position: relative;
+      list-style-type: none;
+      display: flex;
+      flex-direction: row;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+      padding-bottom: 10px;
+
+      scrollbar-width: none;
+
+      &:not(:hover) {
+        .active {
+          anchor-name: --active-link;
+        }
+      }
+
+      >:not(:last-child) {
+        margin-right: 1.2rem;
+      }
+
+      &:before {
+        position: absolute;
+        left: calc(anchor(--active-link left) + 0.5rem);
+        width: calc(anchor-size(--active-link width) - 1rem);
+        bottom: calc(anchor(--active-link bottom) - 18px);
+        height: 10px;
+        margin: 0.3rem 0;
+        content: '';
+        z-index: 0;
+        transition: all 0.2s ease-in-out;
+        // background-color: rgb(229 231 235);
+        background-color: var(--primary);
+        border-radius: 5px;
+      }
+
+      li {
+        font-size: $font-size;
+        background: none;
+        cursor: pointer;
+        border: none;
+        z-index: 1;
+        font-family: "Quicksand", sans-serif;
+        font-weight: 500;
+        white-space: nowrap;
+        color: var(--disabled-text);
+        // padding-bottom: 0.5rem;
+
+        &.current {
+          color: var(--text);
+        }
+
+        &.active {
+          anchor-name: --active-link;
+        }
+
+        &:has(a:is(:hover, :focus-visible)),
+        &:hover {
+          color: var(--text);
+        }
+
+        a {
+          padding: 1rem;
+        }
+      }
+
+    }
+  }
+}
+
+@media (max-width: 730px) {
+  .wrapper {
+    nav {
+      ul {
+
+        padding-bottom: 7px;
+        li {
+          font-size: 1rem;
+          padding-bottom: 2px;
+        }
+
+        &:before {
+          height: 0.5rem;
+          bottom: calc(anchor(--active-link bottom) - 0.8rem);
+        }
+
+        overflow: hidden;
+      }
+    }
+  }
+}
+
+@media (max-width: 450px) {
+  .wrapper {
+    nav {
+      display: flex;
+      justify-content: center;
+    }
+  }
+}

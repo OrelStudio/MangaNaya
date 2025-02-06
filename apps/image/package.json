@@ -1,0 +1,21 @@
+{
+  "name": "image",
+  "type": "module",
+  "scripts": {
+    "dev": "NODE_ENV=development bun run --hot --env-file=.env index.ts",
+    "start": "NODE_ENV=production node ./dist/index.js",
+    "build": "tsup index.ts --out-dir=dist --minify --dts --format=esm --clean"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.709.0",
+    "@aws-sdk/s3-request-presigner": "^3.709.0",
+    "@types/bun": "^1.1.14",
+    "@types/geoip-country": "^4.0.2",
+    "geoip-country": "^4.2.160",
+    "hono": "^4.6.13"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "turbo": "2.1.2"
+  }
+}

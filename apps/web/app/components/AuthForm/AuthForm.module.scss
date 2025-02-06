@@ -1,0 +1,42 @@
+.form {
+  // width: 100%;
+  // min-width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  form {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+
+    .inputs {
+      display: grid;
+      width: 100%;
+      // to be grid of 2 items each row but if not fit one iten per row
+      grid-template-columns: repeat(2, minmax(0, 1fr));  /* Max 2 items per row */
+      gap: 15px;
+    }
+
+    .submit {
+      width: 48.5%;
+    }
+
+    >:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+@media (max-width: 1143px) {
+  .inputs {
+    //grid of 1 item per row
+    grid-template-columns: 1fr !important;
+  }
+  .form {
+    form {
+      .submit {
+        width: 100%;
+      }
+    }
+  }
+}

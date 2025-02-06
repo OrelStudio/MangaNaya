@@ -1,0 +1,8 @@
+{
+  "name": "@manga-naya/types",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "devDependencies": {
+    "typescript": "^5.6.2"
+  }
+}

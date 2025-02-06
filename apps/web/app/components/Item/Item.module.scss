@@ -1,0 +1,47 @@
+.item {
+  display: flex;
+  flex-direction: row;
+  padding: 0 2px;
+}
+
+.image {
+  img {
+    border-radius: 7px;
+  }
+}
+
+.info {
+  word-wrap: break-word;
+  font-family: sans-serif;
+  font-size: 1rem;
+  line-height: 1.2;
+
+  >:not(:last-child) {
+    margin-bottom: 5px;
+  }
+}
+
+.title {
+  font-weight: 700;
+}
+
+.subtitle {
+  font-weight: 500;
+}
+
+.time {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #95a5a6;
+}
+
+.clock {
+  font-size: 20px;
+  transform: translateY(-2px);
+  padding-right: 5px;
+
+  svg {
+    width: 15px;
+  }
+}

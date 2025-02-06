@@ -1,0 +1,78 @@
+.wrapper {
+  $font-size: 3rem;
+
+  nav {
+    position: relative;
+
+    ul {
+      position: relative;
+      list-style-type: none;
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+
+      max-width: 500px;
+      scrollbar-width: none;
+
+      &:not(:hover) {
+        .active {
+          anchor-name: --active-link;
+        }
+      }
+
+      &:before {
+        position: absolute;
+        left: anchor(--active-link left);
+        width: anchor-size(--active-link width);
+        top: calc(anchor(--active-link top) - 0.5rem);
+        bottom: anchor(--active-link bottom);
+        height: 3rem;
+        padding: 5px 0;
+        margin: 0.3rem 0;
+        content: '';
+        z-index: 0;
+        transition: all 0.2s ease-in-out;
+        background-color: rgb(229 231 235);
+        border-radius: 5px;
+      }
+
+      li {
+        font-family: sans-serif;
+        font-size: $font-size;
+        background: none;
+        cursor: pointer;
+        border: none;
+        z-index: 1;
+        color: #95a5a6;
+
+        &:has(a:is(:hover, :focus-visible)),
+        &:hover {
+          anchor-name: --active-link;
+        }
+
+        &.active {
+          color: #000;
+        }
+
+        a {
+          padding: 1rem;
+        }
+      }
+
+    }
+  }
+}
+
+@keyframes loading {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}

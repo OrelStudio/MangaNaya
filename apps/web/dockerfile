@@ -1,0 +1,41 @@
+# ----------------------
+# Stage 1: Builder
+# ----------------------
+FROM oven/bun:1 AS builder
+WORKDIR /app
+
+COPY package.json bun.lockb* ./
+COPY packages ./packages
+RUN bun install
+
+COPY turbo.json .
+COPY apps/web/package.json ./apps/web/package.json
+WORKDIR /app/apps/web
+RUN bun install
+COPY apps/web /app/apps/web/
+RUN bun run build
+
+# ----------------------
+# Stage 2: Runtime
+# ----------------------
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
+USER nextjs
+WORKDIR /app
+ENV NODE_ENV=production
+# ENV NODE_ENV=development
+
+# # 1) Copy node_modules
+# COPY --from=builder /app/node_modules ./node_modules
+
+# # 2) IMPORTANT: Copy the local packages so symlinks aren't broken
+# COPY --from=builder /app/packages ./packages
+
+# # 3) Copy the web application code including package.json
+# COPY --from=builder /app/apps/web ./apps/web
+
+WORKDIR /app/apps/web
+
+EXPOSE 3000
+CMD ["bun", "start"]

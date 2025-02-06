@@ -1,0 +1,8 @@
+{
+  "name": "@manga-naya/queue",
+  "main": "./src/index.ts",
+  "type": "module",
+  "dependencies": {
+    "rxjs": "7.8.1"
+  }
+}

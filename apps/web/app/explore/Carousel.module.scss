@@ -1,0 +1,70 @@
+.carouselWrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+
+  &:hover {
+    .arrowLeft,
+    .arrowRight {
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+  }
+}
+
+.arrowLeft,
+.arrowRight {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  /* Simple styling—update as you wish */
+  background-color: rgba(0, 0, 0, 0);
+  color: white;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  width: 2.2rem;
+  height: 100%;
+  transition: all 0.5s;
+
+  svg {
+    width: 1.2rem;
+  }
+}
+
+.arrowLeft {
+  left: 0;
+}
+
+.arrowRight {
+  right: 0;
+}
+
+.carouselContainer {
+  overflow-x: auto;
+  white-space: nowrap;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.itemsWrapper {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.item {
+  display: inline-block;
+  width: 200px;
+  height: 100px;
+  margin-right: 1rem;
+  user-select: none;
+}
+
+.empty {
+  font-family: sans-serif;
+  font-size: 1.5rem;
+  color: var(--disabled-text);
+  padding-left: 10px;
+}

@@ -1,0 +1,137 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 12px 7px 12px;
+  background-color: var(--primary);
+  color: var(--text);
+  font-family: "Fredoka", sans-serif;
+}
+
+$fontSize: clamp(2.2rem, 2.5vw, 2.5rem);
+
+.dropdown {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  
+  &.open .dropdownContent {
+    opacity: 1;
+  }
+}
+
+.logout {
+  height: 20px;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  font-weight: bold;
+  
+  span {
+    font-size: $fontSize;
+  }
+}
+
+.navigation {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  gap: 55px;
+  align-items: center;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--disabled-text);
+
+  svg {
+    fill: var(--disabled-text);
+  }
+
+  &.active {
+    color: var(--accent);
+
+    svg {
+      fill: var(--accent);
+    }
+  }
+}
+
+.val {
+  font-size: 1.2rem;
+  font-weight: 400;
+  padding: 0 12px 0 12px;
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--accent);
+  }
+}
+
+.icon svg {
+  $iconSize: 25px;
+  width: $iconSize;
+  height: $iconSize;
+  color: var(--text);
+  display: none;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  
+  img {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+  }
+}
+
+@media (max-width: 1175px) {
+  .navigation {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 50px;
+    width: 100%;
+    background-color: var(--primary);
+    z-index: 100;
+    $paddingSide: 22px;
+    padding: 0 $paddingSide 0 $paddingSide;
+  }
+  .icon svg {
+    display: unset;
+  }
+  
+  // .val {
+  //   display: none;
+  // }
+}
+
+@media (max-width: 719px) {
+  .val {
+    display: none;
+  }
+  .navigation {
+    gap: 20vw;
+  }
+}
+
+@media (max-width: 525px) {
+  .val {
+    display: none;
+  }
+}

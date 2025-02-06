@@ -1,0 +1,24 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  font-family: Fredoka, sans-serif;
+  color: var(--text);
+}
+
+.button {
+  svg {
+    $iconSize: 27px;
+    width: $iconSize;
+    height: $iconSize;
+  }
+}

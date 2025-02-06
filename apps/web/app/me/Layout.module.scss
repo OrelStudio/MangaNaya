@@ -1,0 +1,41 @@
+.wrapper {
+  height: 100%;
+}
+
+.banner {
+  height: 20%;
+  background-color: var(--primary);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.username {
+  font-size: 5rem;
+  font-family: "Merriweather Sans", serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1;
+  padding-left: 7px;
+  color: var(--text);
+}
+
+.info {
+  display: flex;
+  position: relative;
+}
+
+.content {
+  background-color: var(--background);
+  height: 60%;
+  width: 100% !important;
+  width: fit-content;
+  padding-top: 10px;
+}
+
+.children {
+  padding: 1rem;
+  width: 100%;
+  padding-top: 15px;
+}

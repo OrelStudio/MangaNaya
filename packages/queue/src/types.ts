@@ -1,0 +1,1 @@
+export type ProcessingQueueType = <T>(callback: (item: T) => Promise<void>, max: number) => ((item: T) => void)

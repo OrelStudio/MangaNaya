@@ -1,0 +1,40 @@
+{
+  "name": "api",
+  "module": "index.ts",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "NODE_ENV=development bun run --hot index.ts",
+    "start": "NODE_ENV=production node ./dist/index.js",
+    "build": "tsup index.ts --out-dir=dist --minify --dts --format=esm --clean"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "tsup": "^8.3.5",
+    "turbo": "2.1.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@manga-naya/cache": "workspace:*",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/lodash.omit": "^4.5.9",
+    "@types/qs": "^6.9.18",
+    "amqplib": "^0.10.5",
+    "axios": "^1.7.9",
+    "bun-types": "^1.1.30",
+    "graphql": "^16.10.0",
+    "hono": "^4.6.3",
+    "jsonwebtoken": "^9.0.2",
+    "lodash.omit": "^4.5.0",
+    "pg": "^8.13.0",
+    "qs": "^6.14.0",
+    "redis": "^4.7.0"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.6.1"
+  }
+}

@@ -1,0 +1,23 @@
+.icon {
+  cursor: pointer;
+  opacity: 1;
+  svg {
+    fill: var(--text);
+    transition: all 0.3s ease;
+    width: 30px;
+    height: 30px;
+  }
+
+  &.active {
+    svg {
+      fill: var(--accent);
+      // transform: scale(1.2);
+    }
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+}
