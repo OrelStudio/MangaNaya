@@ -26,7 +26,7 @@ jobs:
       - name: Automatic Tagging of Releases
         id: increment-git-tag
         run: |
-          bash ./build/git_update.sh -v patch
+          bash .github/scripts/git_update.sh -v patch
 
       # Build and push "web" app
       - name: Build Web Docker image
