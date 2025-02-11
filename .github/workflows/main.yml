@@ -23,6 +23,11 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: Automatic Tagging of Releases
+        id: increment-git-tag
+        run: |
+          bash ./build/git_update.sh -v patch
+
       # Build and push "web" app
       - name: Build Web Docker image
         run: |
@@ -44,7 +49,7 @@ jobs:
       # Build "Extractor" app
       - name: Build Extractor Docker image
         run: |
-          docker build -t extractor:latest -f apps/Etractor/Dockerfile .
+          docker build -t extractor:latest -f apps/Extractor/Dockerfile .
           docker tag extractor:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/extractor:latest
       - name: Push Extractor Docker image
         run: |
@@ -62,7 +67,7 @@ jobs:
       # Build "Scraper" app
       - name: Build Scraper Docker image
         run: |
-          docker build -t scraper:latest -f apps/Sraper/Dockerfile .
+          docker build -t scraper:latest -f apps/Scraper/Dockerfile .
           docker tag scraper:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/scraper:latest
       - name: Push Scraper Docker image
         run: |
