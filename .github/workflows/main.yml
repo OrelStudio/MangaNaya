@@ -27,7 +27,7 @@ jobs:
       - name: Build Web Docker image
         working-directory: apps/web
         run: |
-          docker build -t web:latest -f Dockerfile .
+          docker build -t web:latest -f apps/web/Dockerfile .
           docker tag web:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/web:latest
       - name: Push Web Docker image
         run: |
@@ -37,7 +37,7 @@ jobs:
       - name: Build API Docker image
         working-directory: apps/api
         run: |
-          docker build -t api:latest -f Dockerfile .
+          docker build -t api:latest -f apps/api/Dockerfile .
           docker tag api:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/api:latest
       - name: Push API Docker image
         run: |
@@ -47,7 +47,7 @@ jobs:
       - name: Build Extractor Docker image
         working-directory: apps/Extractor
         run: |
-          docker build -t extractor:latest -f Dockerfile .
+          docker build -t extractor:latest -f apps/Extractor/Dockerfile .
           docker tag extractor:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/extractor:latest
       - name: Push Extractor Docker image
         run: |
@@ -57,7 +57,7 @@ jobs:
       - name: Buiild Image Docker image
         working-directory: apps/image
         run: |
-          docker build -t image:latest -f Dockerfile .
+          docker build -t image:latest -f apps/image/Dockerfile .
           docker tag image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/image:latest
       - name: Push Image Docker image
         run: |
@@ -67,7 +67,7 @@ jobs:
       - name: Build Scraper Docker image
         working-directory: apps/Scraper
         run: |
-          docker build -t scraper:latest -f Dockerfile .
+          docker build -t scraper:latest -f apps/Scraper/Dockerfile .
           docker tag scraper:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/scraper:latest
       - name: Push Scraper Docker image
         run: |
