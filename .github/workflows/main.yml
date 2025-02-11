@@ -1,0 +1,91 @@
+name: Build and Deploy to AWS ECS
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # For each app in the monorepo (turborepo), tag and push to ECR
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # Build and push "web" app
+      - name: Build Web Docker image
+        working-directory: apps/web
+        run: |
+          docker build -t web:latest -f Dockerfile .
+          docker tag web:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/web:latest
+      - name: Push Web Docker image
+        run: |
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/web:latest
+
+      # Build and push "api" app
+      - name: Build API Docker image
+        working-directory: apps/api
+        run: |
+          docker build -t api:latest -f Dockerfile .
+          docker tag api:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/api:latest
+      - name: Push API Docker image
+        run: |
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/api:latest
+
+      # Build "Extractor" app
+      - name: Build Extractor Docker image
+        working-directory: apps/Extractor
+        run: |
+          docker build -t extractor:latest -f Dockerfile .
+          docker tag extractor:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/extractor:latest
+      - name: Push Extractor Docker image
+        run: |
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/extractor:latest
+
+      # Build "image" app
+      - name: Buiild Image Docker image
+        working-directory: apps/image
+        run: |
+          docker build -t image:latest -f Dockerfile .
+          docker tag image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/image:latest
+      - name: Push Image Docker image
+        run: |
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/image:latest
+
+      # Build "Scraper" app
+      - name: Build Scraper Docker image
+        working-directory: apps/Scraper
+        run: |
+          docker build -t scraper:latest -f Dockerfile .
+          docker tag scraper:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/scraper:latest
+      - name: Push Scraper Docker image
+        run: |
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/scraper:latest
+
+      # Deploy updated ECS services
+      - name: Update ECS service for web
+        run: |
+          aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER }} --service web --force-new-deployment
+      - name: Update ECS service for api
+        run: |
+          aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER }} --service api --force-new-deployment
+      - name: Update ECS service for extractor
+        run: |
+          aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER }} --service extractor --force-new-deployment
+      - name: Update ECS service for image
+        run: |
+          aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER }} --service image --force-new-deployment
+      - name: Update ECS service for scraper
+        run: |
+          aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER }} --service scraper --force-new-deployment
