@@ -8,6 +8,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -27,6 +30,8 @@ jobs:
         id: increment-git-tag
         run: |
           bash .github/scripts/git_update.sh -v patch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Build and push "web" app
       - name: Build Web Docker image
