@@ -101,3 +101,6 @@ export {
 
   getCachedS3Client
 }
+export type {
+  RedisType
+}

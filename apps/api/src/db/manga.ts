@@ -18,10 +18,10 @@ import type {
 //   return await ssm.getParameter('manganaya-image-service-url')
 // })()
 
-const getThumbnail = async (mangaId: number): Promise<string> => {
-  const res = await axios.get(`http://image:8000/thumbnail/${mangaId}`)
+const imageServiceUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://img.manganaya.com'
 
-  return res.data.thumbnail
+const getThumbnail = async (mangaId: number): Promise<string> => {
+  return `${imageServiceUrl}/thumbnail/${mangaId}` // web request to that will return the image
 }
 
 const getMangas = async (page: number, userId: number): Promise<MangaTypeDB[]> => {

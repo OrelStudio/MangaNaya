@@ -3,11 +3,42 @@ import getSSMClient from './getSSMClient'
 
 import type {ClientObject, RedisType} from '../types'
 
+const getUrl = async (): Promise<{url: string, password: string}> => {
+  const node_env = process.env.NODE_ENV
+
+  if (node_env === 'development') {
+    if (!process.env.redis_url || !process.env.redis_password) {
+      throw new Error('redis URL not found')
+    }
+    console.log('Using development config')
+    
+    return {
+      url: process.env.redis_url,
+      password: process.env.redis_password
+    }
+  }
+
+  const ssm = await getSSMClient()
+  const url = await ssm.client.getParameter('manganaya-redis-url')
+  const password = await ssm.client.getSecureParameter('manganaya-redis-password')
+
+  if (typeof url !== 'string' || typeof password !== 'string') {
+    throw new Error('Failed to get the redis URL')
+  }
+
+  await ssm.close()
+
+  return {
+    url,
+    password
+  }
+}
+
 const getRedisClient = async(): Promise<ClientObject<RedisType>> => {
   console.log('Creating new Redis client')
-  const url = 'redis://redis:6379' // this is the name of the service in the docker-compose file
+  const {url, password} = await getUrl()
 
-  const redisClient = createClient({url: url})
+  const redisClient = createClient({url: url, password: password})
   redisClient.on('error', (err) => {
     console.error(`Failed to connect to Redis: ${err}`)
   })

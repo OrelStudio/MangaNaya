@@ -6,7 +6,7 @@
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**"],
-      "env": ["API_URL", "IMG_URL", "GOOGLE_REDIRECT_URL", "GOOGLE_CLIENT_ID"]
+      "env": ["API_URL", "IMG_URL", "GOOGLE_REDIRECT_URL", "GOOGLE_CLIENT_ID", "NODE_ENV"]
     },
     "lint": {
       "dependsOn": ["^lint"]

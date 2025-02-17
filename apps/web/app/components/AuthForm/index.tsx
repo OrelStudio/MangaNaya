@@ -39,7 +39,7 @@ const AuthForm = ({mode}: AuthFormProps) => {
       })
     }
 
-    axios.post(`http://api:8080/auth/${mode}`, data, {withCredentials: true}).then((response) => {
+    axios.post(`${process.env.API_URL}/auth/${mode}`, data, {withCredentials: true}).then((response) => {
       // get the cookie called Authorization from the response
       console.log(response)
       // onSubmit(data)

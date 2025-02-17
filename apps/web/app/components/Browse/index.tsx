@@ -52,11 +52,15 @@ const Browse = ({page, userId}: BrowseProps) => {
     setSearchLoading(loading)
   }, [])
 
-  if (error) {
-    return <div>Something went wrong</div>
-  }
-
   const currentData = useMemo(() => searchData.length > 0 && search.trim() !== '' ? {page: searchData} : {page: data?.page.mangas}, [searchData, data])
+
+  // if (error) {
+  //   return (
+  //     <div style={{color: 'var(--text)', fontSize: '1.5rem'}}>
+  //       Something went wrong
+  //     </div>
+  //   )
+  // }
   
   return (
     <div className={styles.wrapper}>

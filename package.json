@@ -19,5 +19,10 @@
   "workspaces": [
     "apps/*",
     "packages/*"
+  ],
+  "trustedDependencies": [
+    "@parcel/watcher",
+    "core-js-pure",
+    "protobufjs"
   ]
 }

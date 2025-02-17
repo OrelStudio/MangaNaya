@@ -78,19 +78,23 @@ jobs:
         run: |
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/scraper:latest
 
-      # Deploy updated ECS services
-      - name: Update ECS service for web
+      # Deploy Kubernetes manifests to EKS
+      # This assumes EKS cluster already exists.
+      - name: Configure kubectl for EKS
         run: |
-          aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER }} --service web --force-new-deployment
-      - name: Update ECS service for api
-        run: |
-          aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER }} --service api --force-new-deployment
-      - name: Update ECS service for extractor
-        run: |
-          aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER }} --service extractor --force-new-deployment
-      - name: Update ECS service for image
-        run: |
-          aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER }} --service image --force-new-deployment
-      - name: Update ECS service for scraper
-        run: |
-          aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER }} --service scraper --force-new-deployment
+          aws eks update-kubeconfig --name manganaya-eks-cluster --region ${{ secrets.AWS_REGION }}
+
+      - name: Deploy Web Service to EKS
+        run: kubectl apply -f k8s/web-deployment.yml
+
+      - name: Deploy API Service to EKS
+        run: kubectl apply -f k8s/api-deployment.yml
+
+      - name: Deploy Image Service to EKS
+        run: kubectl apply -f k8s/image-deployment.yml
+
+      - name: Deploy Scraper Service to EKS
+        run: kubectl apply -f k8s/scraper-deployment.yml
+
+      - name: Deploy Extractor Service to EKS
+        run: kubectl apply -f k8s/extractor-deployment.yml

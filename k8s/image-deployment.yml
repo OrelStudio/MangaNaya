@@ -1,0 +1,38 @@
+imageVersion: apps/v1
+kind: Deployment
+metadata:
+  name: image-deployment
+  namespace: default
+  labels:
+    app: image
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: image
+  template:
+    metadata:
+      labels:
+        app: image
+    spec:
+      containers:
+      - name: image
+        image: 711387099555.dkr.ecr.eu-north-1.amazonaws.com/image:latest
+        ports:
+        - containerPort: 8000
+---
+imageVersion: v1
+kind: Service
+metadata:
+  name: image-service
+  namespace: default
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-eip-allocations: eipalloc-077a26d185fc25524
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8000
+    targetPort: 8000
+  selector:
+    app: image

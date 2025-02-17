@@ -27,7 +27,7 @@ const getDBConfig = async () => {
 
   return {
     user: 'postgres',
-    host: 'manganaya-db.cn6umsoqy9rd.eu-north-1.rds.amazonaws.com',
+    host: 'https://manganaya-db.cn6umsoqy9rd.eu-north-1.rds.amazonaws.com',
     database: 'manganaya',
     password,
     port: 5432

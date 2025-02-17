@@ -4,7 +4,7 @@ import listenToQueue from './src/rabbit'
 import downloadChapter from './src/downloadChapter'
 import downloadThumbnail from './src/downloadThumbnail'
 
-import type {RedisClientType} from 'redis'
+import type {RedisType} from '@manga-naya/cache'
 import {SourceType} from '@manga-naya/types'
 
 const node_env = process.env.NODE_ENV
@@ -23,29 +23,27 @@ type ThumbnailRequestType = {
 }
 
 // Removes the key from the cache
-const updateState = async (redisClient: RedisClientType, key: string) => {
+const updateState = async (redisClient: RedisType, key: string) => {
   await redisClient.del(key)
 }
 
 const config = await (node_env === 'development' ? Promise.resolve({
-  RabbitMQUrl: 'amqp://rabbitmq', // this is alias for the rabbitmq service
   MAX_CHAPTERS: Number(process.env.MAX_CHAPTERS),
   MAX_THUMBNAILS: Number(process.env.MAX_THUMBNAILS)
 }) : (async() => {
   const ssm = await getCachedSSMClient()
   return {
-    RabbitMQUrl: 'amqp://rabbitmq', // this is alias for the rabbitmq service
     MAX_CHAPTERS: Number(await ssm.getParameter('manganaya-extractor-max-chapters')),
     MAX_THUMBNAILS: Number(await ssm.getParameter('manganaya-extractor-max-thumbnails'))
   }
 })())
 
-const {RabbitMQUrl, MAX_CHAPTERS, MAX_THUMBNAILS} = config
+const {MAX_CHAPTERS, MAX_THUMBNAILS} = config
 
 const chaptersQueue = 'chapter'
 const thumbnailsQueue = 'thumbnail'
-if (!RabbitMQUrl || !MAX_CHAPTERS || !MAX_THUMBNAILS) {
-  throw new Error('RABBITMQ_URL is not set')
+if (!MAX_CHAPTERS || !MAX_THUMBNAILS) {
+  throw new Error('ENV is not set')
 }
 
 const chapterHandler = async(query: ExtractRequestType) => {

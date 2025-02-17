@@ -44,7 +44,9 @@ app.get('/panel/:id', async(c) => {
 app.get('/thumbnail/:id', async(c) => {
   try {
     const thumbnail = await getThumbnail(c)
-    return c.json({thumbnail})
+
+    // @ts-ignore
+    return c.newResponse(thumbnail)
   } catch (e) {
     c.status(500)
     return c.json({message: 'Something went wrong :('})

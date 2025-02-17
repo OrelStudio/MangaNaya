@@ -12,10 +12,10 @@ const nextConfig = {
   },
   output: 'standalone', // for docker
   env: {
-    IMG_URL: 'http://img.manganaya.com',
-    API_URL: 'http://api.manganaya.com',
+    IMG_URL: process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'http://img.manganaya.com',
+    API_URL: process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'http://api.manganaya.com',
     GOOGLE_CLIENT_ID: '743146176292-fjhqskg2r56shnbva76dkt4i1r0iavcc.apps.googleusercontent.com',
-    GOOGLE_REDIRECT_URL: `http://api.manganaya.com/oauth/google`,
+    GOOGLE_REDIRECT_URL: process.env.NODE_ENV === 'development' ? 'http://localhost:8080/oauth/google' : `http://api.manganaya.com/oauth/google`,
   },
 }
 

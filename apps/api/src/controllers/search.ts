@@ -27,6 +27,9 @@ const searchQuery = async (query: string, userId: number): Promise<MangaTypeDB[]
   const redisClient = await getCachedRedisClient()
   const cache = await redisClient.get(`s-${query}`)
 
+  console.log(`Cache: ${cache}`)
+  
+
   if (cache === null) {
     // Request the scraper to search for more mangas  
     const channel = await getCachedRabbitClient()

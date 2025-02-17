@@ -8,7 +8,16 @@ services:
     restart: unless-stopped
     ports:
       - "8080:8080"
-    AssignPublicIp: ENABLED
+    environment:
+      NODE_ENV: "development"
+      JWT_SECRET: "WzdG%Yu&e!fT%*zT%&f@VivC2VUwMArBNMw6VA9vctRphfdezsEDBj3ikhDqFeZq2Utb%mU53zgsAzjY4!%dtWkyYRVVXWwPVyiMJWjpnPs74od*XN$2JwaBr3cWk!h"
+      google_client_id: "743146176292-fjhqskg2r56shnbva76dkt4i1r0iavcc.apps.googleusercontent.com"
+      google_client_secret: "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"
+      google_redirect_url: "http://localhost:8080/oauth/google"
+      manganaya-redis-url: 'redis'
+      manganaya-redis-password: 'redisLocalPs5'
+      RABBITMQ_URL: 'rabbitmq'
+      RABBITMQ_PASSWORD: 'rbtqrl12!'
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -21,9 +30,14 @@ services:
     restart: unless-stopped
     ports:
       - "8000:8000"
-    AssignPublicIp: ENABLED
     environment:
       IMG_PORT: "5050"
+      NODE_ENV: "development"
+      JWT_SECRET: "WzdG%Yu&e!fT%*zT%&f@VivC2VUwMArBNMw6VA9vctRphfdezsEDBj3ikhDqFeZq2Utb%mU53zgsAzjY4!%dtWkyYRVVXWwPVyiMJWjpnPs74od*XN$2JwaBr3cWk!h"
+      RABBITMQ_URL: 'rabbitmq'
+      RABBITMQ_PASSWORD: 'rbtqrl12!'
+      manganaya-redis-url: 'redis'
+      manganaya-redis-password: 'redisLocalPs5'
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -36,7 +50,15 @@ services:
     restart: unless-stopped
     ports:
       - "8001:8001"
-    AssignPublicIp: DISABLED
+    environment:
+      NODE_ENV: "development"
+      MAX_REQUESTS: 5
+      # Time in milliseconds between manga requests
+      DELAY: 1000
+      RABBITMQ_URL: 'rabbitmq'
+      RABBITMQ_PASSWORD: 'rbtqrl12!'
+      manganaya-redis-url: 'redis'
+      manganaya-redis-password: 'redisLocalPs5'
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -49,7 +71,16 @@ services:
     restart: unless-stopped
     ports:
       - "8002:8002"
-    AssignPublicIp: DISABLED
+    environment:
+      NODE_ENV: "development"
+      # maximum of chapters to be extracted at a time
+      MAX_CHAPTERS: 2
+      # maximum of thumbnails to be extracted at a time
+      MAX_THUMBNAILS: 5
+      RABBITMQ_URL: 'rabbitmq'
+      RABBITMQ_PASSWORD: 'rbtqrl12!'
+      manganaya-redis-url: 'redis'
+      manganaya-redis-password: 'redisLocalPs5'
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -62,7 +93,8 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
-    AssignPublicIp: ENABLED
+    environment:
+      NODE_ENV: "development"
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -72,8 +104,8 @@ services:
     image: rabbitmq:3-management-alpine
     restart: unless-stopped
     environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_USER: manganayamq
+      RABBITMQ_DEFAULT_PASS: rbtqrl12!
     ports:
       - "5672:5672"   # AMQP
       - "15672:15672" # Management UI
@@ -84,6 +116,13 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+  redis:
+    image: redis:latest
+    container_name: redis
+    command: /bin/sh -c "redis-server --requirepass redisLocalPs5"
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
 
 volumes:
   rabbitmq_data:
