@@ -6,21 +6,21 @@ import scrapeQuery from './src/scrapeQuery'
 const node_env = process.env.NODE_ENV
 
 const config = await (node_env === 'development' ? Promise.resolve({
-  RabbitMQUrl: 'amqp://rabbitmq', // this is alias for the rabbitmq service
   MAX: Number(process.env.MAX_REQUESTS),
   DELAY: Number(process.env.DELAY)
 }) : (async() => {
   const ssm = await getCachedSSMClient()
   return {
-    RabbitMQUrl: 'amqp://rabbitmq', // this is alias for the rabbitmq service
-    MAX: await Number(ssm.getParameter('manganaya-scraper-max')),
-    DELAY: await Number(ssm.getParameter('manganaya-scraper-delay'))
+    // MAX: await Number(ssm.getParameter('manganaya-scraper-max')),
+    // DELAY: await Number(ssm.getParameter('manganaya-scraper-delay'))
+    MAX: 5,
+    DELAY: 1000
   }
 })())
 
-const {RabbitMQUrl, MAX, DELAY} = config
+const {MAX, DELAY} = config
 
-if (!RabbitMQUrl || !MAX || !DELAY) {
+if (!MAX || !DELAY) {
   throw new Error('Failed to get environment')
 }
 

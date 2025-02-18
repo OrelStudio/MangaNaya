@@ -105,16 +105,26 @@ jobs:
           aws eks update-kubeconfig --name manganaya-eks-cluster --region ${{ secrets.AWS_REGION }}
 
       - name: Deploy Web Service to EKS
-        run: kubectl apply -f k8s/web-deployment.yml
+        run: |
+          kubectl delete -f k8s/web-deployment.yml
+          kubectl apply -f k8s/web-deployment.yml
 
       - name: Deploy API Service to EKS
-        run: kubectl apply -f k8s/api-deployment.yml
+        run: |
+          kubectl delete -f k8s/api-deployment.yml
+          kubectl apply -f k8s/api-deployment.yml
 
       - name: Deploy Image Service to EKS
-        run: kubectl apply -f k8s/image-deployment.yml
+        run: |
+          kubectl delete -f k8s/image-deployment.yml
+          kubectl apply -f k8s/image-deployment.yml
 
       - name: Deploy Scraper Service to EKS
-        run: kubectl apply -f k8s/scraper-deployment.yml
+        run: |
+          kubectl delete -f k8s/scraper-deployment.yml
+          kubectl apply -f k8s/scraper-deployment.yml
 
       - name: Deploy Extractor Service to EKS
-        run: kubectl apply -f k8s/extractor-deployment.yml
+        run: |
+          kubectl delete -f k8s/extractor-deployment.yml
+          kubectl apply -f k8s/extractor-deployment.yml
