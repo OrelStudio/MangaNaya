@@ -3,7 +3,13 @@ import {SSMClient, GetParameterCommand} from '@aws-sdk/client-ssm'
 import type {ClientObject, SSMClientType} from '../types'
 
 const getSSMClient = async(): Promise<ClientObject<SSMClientType>> => {
-  const client = new SSMClient({region: 'eu-north-1'}) // TODO: get from config
+  const client = new SSMClient({
+    region: 'eu-north-1',
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!
+    }
+  })
 
   const getParameter = async(parameterName: string) => {
     const response = await client.send(

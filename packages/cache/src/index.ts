@@ -6,7 +6,6 @@ import {S3Client} from '@aws-sdk/client-s3'
 import getDBClient from './clients/getDBClient'
 import getRedisClient from './clients/getRedisClient'
 import {getRabbitClient, initRabbitConnection} from './clients/getRabbitClient'
-import getSecretsManagerClient from './clients/getSecretsManagerClient'
 import getSSMClient from './clients/getSSMClient'
 import getS3Client from './clients/getS3Client'
 
@@ -21,7 +20,6 @@ const clients = {
   db: getDBClient,
   redis: getRedisClient,
   rabbitmq: getRabbitClient,
-  secrets: getSecretsManagerClient,
   ssm: getSSMClient,
   s3: getS3Client
 }
@@ -74,10 +72,6 @@ const getCachedRabbitClient = async (): Promise<amqplib.Channel> => {
   return await getCachedClient('rabbitmq') as amqplib.Channel
 }
 
-const getCachedSecretsManagerClient = async (): Promise<SecretsManagerClientType> => {
-  return await getCachedClient('secrets') as SecretsManagerClientType
-}
-
 const getCachedSSMClient = async (): Promise<SSMClientType> => {
   return await getCachedClient('ssm') as SSMClientType
 }
@@ -92,7 +86,6 @@ export {
   getCachedRedisClient,
   getRedisClient,
 
-  getCachedSecretsManagerClient,
   getCachedSSMClient,
 
   getCachedRabbitClient,
