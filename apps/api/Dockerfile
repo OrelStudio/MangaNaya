@@ -27,6 +27,12 @@
   # ENV NODE_ENV=production
   ARG NODE_ENV
   ENV NODE_ENV=${NODE_ENV}
+
+  ARG AWS_ACCESS_KEY_ID
+  ARG AWS_SECRET_ACCESS_KEY
+
+  ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+  ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
   
   # 1) Copy the built files
   COPY --from=builder /app/apps/api/dist ./dist
