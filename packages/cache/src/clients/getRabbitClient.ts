@@ -44,7 +44,7 @@ const initRabbitConnection = async (): Promise<amqplib.Connection> => {
     const connection = await amqplib.connect({
       hostname: url,
       port: port,
-      protocol: 'amqp',
+      protocol: process.env.NODE_ENV === 'development' ? 'amqp' : 'amqps',
       heartbeat: 60,
       username: 'manganayamq',
       password: password
