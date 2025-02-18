@@ -40,7 +40,7 @@ const getRedisClient = async(): Promise<ClientObject<RedisType>> => {
 
   const redisClient = createClient({url: url, password: password})
   redisClient.on('error', (err) => {
-    console.error(`Failed to connect to Redis: ${err}`)
+    console.error(`Failed to connect to Redis: ${err} url: ${url}`)
   })
   await redisClient.connect()
   console.log('Connected to Redis')

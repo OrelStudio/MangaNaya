@@ -49,6 +49,7 @@ const initRabbitConnection = async (): Promise<amqplib.Connection> => {
     password: password
   })
   // const connection = await amqplib.connect(`amqp://manganayamq:${password}@rabbitmq:5672`)
+  console.log(`Connected to RabbitMQ at ${url}:${port}`)
   connectionState = connection
   return connection
 }
