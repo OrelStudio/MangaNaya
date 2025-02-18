@@ -45,7 +45,12 @@ jobs:
       # Build and push "api" app
       - name: Build API Docker image
         run: |
-          docker build -t api:latest -f apps/api/Dockerfile .
+          docker build \
+            --build-arg NODE_ENV=production \
+            --build-arg AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+            --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+            --build-arg AWS_REGION=${{ secrets.AWS_REGION }} \
+            -t api:latest -f apps/api/Dockerfile .
           docker tag api:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/api:latest
       - name: Push API Docker image
         run: |
@@ -54,7 +59,12 @@ jobs:
       # Build "Extractor" app
       - name: Build Extractor Docker image
         run: |
-          docker build -t extractor:latest -f apps/Extractor/Dockerfile .
+          docker build \
+            --build-arg NODE_ENV=production \
+            --build-arg AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+            --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+            --build-arg AWS_REGION=${{ secrets.AWS_REGION }} \
+            -t extractor:latest -f apps/Extractor/Dockerfile .
           docker tag extractor:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/extractor:latest
       - name: Push Extractor Docker image
         run: |
@@ -63,7 +73,12 @@ jobs:
       # Build "image" app
       - name: Buiild Image Docker image
         run: |
-          docker build -t image:latest -f apps/image/Dockerfile .
+          docker build \
+            --build-arg NODE_ENV=production \
+            --build-arg AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+            --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+            --build-arg AWS_REGION=${{ secrets.AWS_REGION }} \
+            -t image:latest -f apps/image/Dockerfile .
           docker tag image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/image:latest
       - name: Push Image Docker image
         run: |
@@ -72,7 +87,12 @@ jobs:
       # Build "Scraper" app
       - name: Build Scraper Docker image
         run: |
-          docker build -t scraper:latest -f apps/Scraper/Dockerfile .
+          docker build \
+            --build-arg NODE_ENV=production \
+            --build-arg AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+            --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+            --build-arg AWS_REGION=${{ secrets.AWS_REGION }} \
+            -t scraper:latest -f apps/Scraper/Dockerfile .
           docker tag scraper:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/scraper:latest
       - name: Push Scraper Docker image
         run: |
