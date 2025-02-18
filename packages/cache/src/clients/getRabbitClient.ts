@@ -40,18 +40,23 @@ const getConfig = async (): Promise<{url: string, password: string, port: number
 
 const initRabbitConnection = async (): Promise<amqplib.Connection> => {
   const {url, password, port} = await getConfig()
-  const connection = await amqplib.connect({
-    hostname: url,
-    port: port,
-    protocol: 'amqp',
-    heartbeat: 60,
-    username: 'manganayamq',
-    password: password
-  })
-  // const connection = await amqplib.connect(`amqp://manganayamq:${password}@rabbitmq:5672`)
-  console.log(`Connected to RabbitMQ at ${url}:${port}`)
-  connectionState = connection
-  return connection
+  try {
+    const connection = await amqplib.connect({
+      hostname: url,
+      port: port,
+      protocol: 'amqp',
+      heartbeat: 60,
+      username: 'manganayamq',
+      password: password
+    })
+    // const connection = await amqplib.connect(`amqp://manganayamq:${password}@rabbitmq:5672`)
+    console.log(`Connected to RabbitMQ at ${url}:${port}`)
+    connectionState = connection
+    return connection
+  } catch (error) {
+    console.error(`Failed to connect to RabbitMQ at ${url}:${port}`, error)
+    throw error
+  }
 }
 
 const getRabbitClient = async (): Promise<ClientObject<amqplib.Channel>> => {
