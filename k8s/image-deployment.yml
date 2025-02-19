@@ -27,8 +27,10 @@ metadata:
   name: image-service
   namespace: default
   annotations:
-    service.beta.kubernetes.io/aws-load-balancer-eip-allocations: eipalloc-077a26d185fc25524
+    service.beta.kubernetes.io/aws-load-balancer-eip-allocations: eipalloc-0cfa85020cd522d98
     service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-subnets: "subnet-0ee96b46dea70b693,subnet-079e0d3c6c3559979"
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
 spec:
   type: LoadBalancer
   ports:
