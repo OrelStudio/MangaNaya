@@ -28,8 +28,8 @@ metadata:
   namespace: default
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-eip-allocations: eipalloc-0990eb4adde1912cf
+    service.beta.kubernetes.io/aws-load-balancer-subnets: "subnet-040f0398d4a947e3c"
     service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
-    service.beta.kubernetes.io/aws-load-balancer-subnets: "subnet-0ee96b46dea70b693,subnet-079e0d3c6c3559979"
     service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
 spec:
   type: LoadBalancer
