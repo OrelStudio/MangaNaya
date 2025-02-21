@@ -106,25 +106,25 @@ jobs:
 
       - name: Deploy Web Service to EKS
         run: |
-          kubectl delete -f k8s/web-deployment.yml
+          kubectl delete -f k8s/web-deployment.yml --ignore-not-found
           kubectl apply -f k8s/web-deployment.yml
 
       - name: Deploy API Service to EKS
         run: |
-          kubectl delete -f k8s/api-deployment.yml
+          kubectl delete -f k8s/api-deployment.yml --ignore-not-found
           kubectl apply -f k8s/api-deployment.yml
 
       - name: Deploy Image Service to EKS
         run: |
-          kubectl delete -f k8s/image-deployment.yml
+          kubectl delete -f k8s/image-deployment.yml --ignore-not-found
           kubectl apply -f k8s/image-deployment.yml
 
       - name: Deploy Scraper Service to EKS
         run: |
-          kubectl delete -f k8s/scraper-deployment.yml
+          kubectl delete -f k8s/scraper-deployment.yml --ignore-not-found
           kubectl apply -f k8s/scraper-deployment.yml
 
       - name: Deploy Extractor Service to EKS
         run: |
-          kubectl delete -f k8s/extractor-deployment.yml
+          kubectl delete -f k8s/extractor-deployment.yml --ignore-not-found
           kubectl apply -f k8s/extractor-deployment.yml
