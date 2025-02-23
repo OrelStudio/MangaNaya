@@ -12,7 +12,7 @@ vpc:
 nodeGroups:
   - name: manganaya-ng
     instanceType: t3.micro
-    desiredCapacity: 3
+    desiredCapacity: 1
     minSize: 1
-    maxSize: 4
+    maxSize: 2
     privateNetworking: true
