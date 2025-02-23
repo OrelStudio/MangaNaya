@@ -125,6 +125,7 @@ const googleOAuthHandler = async (c: Context) => {
 
     if (!tokens) {
       c.status(401)
+      console.log(`Failed to get Google OAuth tokens, code: ${code}, config: ${JSON.stringify(config)}`)
       return c.json({
         message: 'Failed to get Google OAuth tokens'
       })

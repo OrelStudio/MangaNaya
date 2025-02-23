@@ -7,15 +7,7 @@ import getThumbnail from './src/controllers/thumbnail'
 
 const app = new Hono()
 
-const origin = process.env.NODE_ENV === 'development' ? '*' : 'https://www.manganaya.com'
-
-// for production
-// const corsOptions = {
-//   origin: 'https://www.manganaya.com', // Replace with your frontend domain
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//   allowedHeaders: ['Content-Type', 'Authorization'],
-//   credentials: true,
-// }
+const origin = process.env.NODE_ENV === 'development' ? '*' : 'https://manganaya.com'
 
 // for development
 const corsOptions = {
@@ -26,8 +18,8 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions))
-// app.use('/panel', auth) // uncomment this line to enable authentication
-// app.use('/thumbnail', auth) // uncomment this line to enable authentication
+app.use('/panel', auth) // uncomment this line to enable authentication
+app.use('/thumbnail', auth) // uncomment this line to enable authentication
 
 app.get('/panel/:id', async(c) => {
   try {
