@@ -12,7 +12,8 @@
     "@types/bun": "^1.1.14",
     "@types/geoip-country": "^4.0.2",
     "geoip-country": "^4.2.160",
-    "hono": "^4.6.13"
+    "hono": "^4.6.13",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "tsup": "^8.3.5",
