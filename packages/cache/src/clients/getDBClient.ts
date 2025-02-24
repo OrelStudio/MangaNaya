@@ -18,8 +18,9 @@ const getDBConfig = async () => {
 
   const ssm = await getSSMClient()
   const password = await ssm.client.getSecureParameter('manganaya-db-password')
+  const url = await ssm.client.getSecureParameter('manganaya-db-url')
 
-  if (typeof password !== 'string') {
+  if (typeof password !== 'string' || typeof url !== 'string') {
     throw new Error('Failed to get the database password')
   }
 
@@ -27,7 +28,7 @@ const getDBConfig = async () => {
 
   return {
     user: 'postgres',
-    host: 'https://manganaya-db.cn6umsoqy9rd.eu-north-1.rds.amazonaws.com',
+    host: url,
     database: 'manganaya',
     password,
     port: 5432,
