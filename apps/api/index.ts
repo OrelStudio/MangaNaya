@@ -13,17 +13,8 @@ const app = new Hono()
 const node_env = process.env.NODE_ENV
 console.log(`Running in ${node_env} mode`)
 
-const origin = node_env === 'development' ? 'http://localhost:3000' : 'https://www.manganaya.com'
+const origin = node_env === 'development' ? ['http://localhost:3000'] : ['https://manganaya.com/', 'https://www.manganaya.com/']
 
-// for production
-// const corsOptions = {
-//   origin: 'https://www.manganaya.com', // Replace with your frontend domain
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//   allowedHeaders: ['Content-Type', 'Authorization'],
-//   credentials: true,
-// }
-
-// for development
 const corsOptions = {
   origin,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
