@@ -40,8 +40,6 @@ initRabbitConnection().then(async (connection) => {
       return
     }
     await scrapeQuery(channel, extractorQueue, DELAY, query)
-    const redisClient = await getCachedRedisClient()
-    await redisClient.del(`s-${query}`)
   }
 
   // Listen to the scraper queue

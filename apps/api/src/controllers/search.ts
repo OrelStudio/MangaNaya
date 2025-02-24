@@ -35,12 +35,6 @@ const searchQuery = async (query: string, userId: number): Promise<MangaTypeDB[]
     const channel = await getCachedRabbitClient()
     
     requestScrape(channel, query)
-    // Update the cache
-    try {
-      await redisClient.set(`s-${query}`, 'true')
-    } catch (error) {
-      throw new APIError((`Failed to set cache: ${error}`), 500)
-    }
   }
 
   // whether the cache is set or not, if the mangas are empty, we throw an error

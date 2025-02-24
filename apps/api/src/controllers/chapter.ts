@@ -42,7 +42,6 @@ const getChapter = async (id: number, userId: number): Promise<{chapter: Chapter
         const channel = await getCachedRabbitClient()
         console.log(`Requesting chapter ${requestedChapter.chapter_number} for ${manga.name}`)
         requestChapter(channel, requestedChapter.source, requestedChapter.chapter_number, requestedChapter.chapter_link, manga.name)
-        await redisClient.set(`c-${manga.name}-${requestedChapter.chapter_number}`, 'true')
       }
       throw new APIError('Requested', 202)
     }

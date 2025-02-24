@@ -48,12 +48,16 @@ if (!MAX_CHAPTERS || !MAX_THUMBNAILS) {
 
 const chapterHandler = async(query: ExtractRequestType) => {
   const redisClient = await getCachedRedisClient()
-  await updateState(redisClient, `c-${query.name}-${query.index}`)
+  await redisClient.set(`c-${query.name}-${query.index}`, 'true')
   await downloadChapter({source: query.source, index: query.index, link: query.link, name: query.name})
+  await updateState(redisClient, `c-${query.name}-${query.index}`)
 }
 
 const thumbnailHandler = async(query: ThumbnailRequestType) => {
+  const redisClient = await getCachedRedisClient()
+  await redisClient.set(`s-${query.name}`, 'true')
   await downloadThumbnail(query.thumbnailLink, query.name)
+  await updateState(redisClient, `s-${query.name}`)
 }
 
 initRabbitConnection().then(async (connection) => {

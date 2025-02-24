@@ -50,6 +50,8 @@ const getMangas = async (page: number, userId: number): Promise<MangaTypeDB[]> =
       thumbnail: await getThumbnail(manga.id),
     })))
 
+    console.log('get mangas browse:', result)
+
     return result
   } catch (err) {
     console.error('Error getting mangas:', err)
