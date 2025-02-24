@@ -1,4 +1,3 @@
-import axios from 'axios'
 import {getCachedDBClient} from '@manga-naya/cache'
 
 import type {

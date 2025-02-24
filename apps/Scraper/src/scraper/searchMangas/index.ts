@@ -1,5 +1,5 @@
 import {JSDOM} from 'jsdom'
-import getAxios from '../axios/getAxios'
+import getHeaders from '../headers/getHeaders'
 
 import {MangaItemType} from '@manga-naya/types'
 type MangaType = Omit<MangaItemType, 'genres' | 'description'> & { source: 'kakalot' | 'mangagojo' }
@@ -31,8 +31,8 @@ type SourceType = keyof typeof sourcesInfo
 const searchMangas = (source: SourceType, query: string, page: number): Promise<MangaType[]> => {
   const cleanQuery = query.replace(/ /g, '_')
 
-  const axios = getAxios()
-  return axios.get(sourcesInfo[source].url(cleanQuery, page)).then((res: any) => {
+  const headers = getHeaders()
+  return fetch(sourcesInfo[source].url(cleanQuery, page), {headers}).then((response) => response.text()).then((res: any) => {
     // creating a dom from HTML string
     const dom = new JSDOM(res.data)
 

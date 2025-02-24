@@ -1,5 +1,5 @@
 import {JSDOM} from 'jsdom'
-import getAxios from '../axios/getAxios'
+import getHeaders from '../headers/getHeaders'
 
 import {ChapterResultsType} from '@manga-naya/types'
 interface ChapterType extends ChapterResultsType {
@@ -27,8 +27,8 @@ const sourcesInfo = {
 type SourceType = keyof typeof sourcesInfo
 
 const getChapters = (source: SourceType, link: string): Promise<ChapterType[]> => {
-  const axios = getAxios()
-  return axios.get(link).then((res: any) => {
+  const headers = getHeaders()
+  return fetch(link, {headers}).then((response) => response.text()).then((res: any) => {
     // creating a dom from HTML string
     const dom = new JSDOM(res.data)
 
