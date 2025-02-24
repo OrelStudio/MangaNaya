@@ -30,7 +30,10 @@ const getDBConfig = async () => {
     host: 'https://manganaya-db.cn6umsoqy9rd.eu-north-1.rds.amazonaws.com',
     database: 'manganaya',
     password,
-    port: 5432
+    port: 5432,
+    ssl: {
+      rejectUnauthorized: false
+    }
   }
 }
 
