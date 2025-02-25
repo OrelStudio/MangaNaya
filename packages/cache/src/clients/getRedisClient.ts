@@ -7,14 +7,14 @@ const getUrl = async (): Promise<{url: string, password: string}> => {
   const node_env = process.env.NODE_ENV
 
   if (node_env === 'development') {
-    if (!process.env.redis_url || !process.env.redis_password) {
-      throw new Error('redis URL not found')
-    }
+    // if (!process.env.redis_url) {
+    //   throw new Error('redis URL not found')
+    // }
     console.log('Using development config')
     
     return {
-      url: process.env.redis_url,
-      password: process.env.redis_password
+      url: 'redis://localhost:6379',
+      password: ''
     }
   }
 

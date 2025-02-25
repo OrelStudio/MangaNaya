@@ -4,7 +4,7 @@ import {setCookie} from 'hono/cookie'
 import {getCachedSSMClient} from '@manga-naya/cache'
 import type {Context} from 'hono'
 
-import {isUserExist, getUser} from '../db/user'
+import {isUserExist, getUser} from '../db'
 import {addUser, generateToken} from '../controllers/auth'
 
 type Config = {

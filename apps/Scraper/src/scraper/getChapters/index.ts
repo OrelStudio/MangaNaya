@@ -1,5 +1,6 @@
 import {JSDOM} from 'jsdom'
 import getHeaders from '../headers/getHeaders'
+import requestHTML from '../requestHTML'
 
 import {ChapterResultsType} from '@manga-naya/types'
 interface ChapterType extends ChapterResultsType {
@@ -28,9 +29,9 @@ type SourceType = keyof typeof sourcesInfo
 
 const getChapters = (source: SourceType, link: string): Promise<ChapterType[]> => {
   const headers = getHeaders()
-  return fetch(link, {headers}).then((response) => response.text()).then((res: any) => {
+  return requestHTML(link, headers).then((res) => {
     // creating a dom from HTML string
-    const dom = new JSDOM(res.data)
+    const dom = new JSDOM(res)
 
     const genresE = [...dom.window.document.querySelectorAll(sourcesInfo[source].genres)]
     const descriptionE = dom.window.document.querySelector(sourcesInfo[source].description) as HTMLElement

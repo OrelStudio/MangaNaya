@@ -1,4 +1,5 @@
 import {getCachedDBClient} from '@manga-naya/cache'
+import {Client} from 'pg'
 
 import type {
   UserResultType,
@@ -23,10 +24,8 @@ const getThumbnail = async (mangaId: number): Promise<string> => {
   return `${imageServiceUrl}/thumbnail/${mangaId}` // web request to that will return the image
 }
 
-const getMangas = async (page: number, userId: number): Promise<MangaTypeDB[]> => {
+const getMangas = async (client: Client, page: number, userId: number): Promise<MangaTypeDB[]> => {
   try {
-    const client = await getCachedDBClient()
-    
     const res = await client.query(`
       SELECT
         m.*,
@@ -58,10 +57,8 @@ const getMangas = async (page: number, userId: number): Promise<MangaTypeDB[]> =
   }
 }
 
-const getManga = async (id: number, userId: number): Promise<MangaTypeDB> => {
+const getManga = async (client: Client, id: number, userId: number): Promise<MangaTypeDB> => {
   try {
-    const client = await getCachedDBClient()
-    
     const res = await client.query(`
       SELECT
         m.*,
@@ -93,10 +90,8 @@ const getManga = async (id: number, userId: number): Promise<MangaTypeDB> => {
   }
 }
 
-const searchManga = async (query: string, userId: number): Promise<MangaTypeDB[]> => {
+const searchManga = async (client: Client, query: string, userId: number): Promise<MangaTypeDB[]> => {
   try {
-    const client = await getCachedDBClient()
-    
     const res = await client.query(`
       SELECT
         m.*,
@@ -136,11 +131,11 @@ const removeDuplicates = (chapters: ChapterTypeDB[]): ChapterTypeDB[] => {
 }
 
 const getChapters = async (
+  client: Client,
   mangaId: number,
   userId: number
 ): Promise<ChapterTypeDB[]> => {
   try {
-    const client = await getCachedDBClient()
     const res = await client.query(`
       SELECT
         c.*,
@@ -170,9 +165,8 @@ const getChapters = async (
   }
 }
 
-const getChapter = async (id: number, userId: number): Promise<ChapterTypeDB> => {
+const getChapter = async (client: Client, id: number, userId: number): Promise<ChapterTypeDB> => {
   try {
-    const client = await getCachedDBClient()
     const res = await client.query(`
       SELECT
         c.*,
@@ -199,9 +193,8 @@ const getChapter = async (id: number, userId: number): Promise<ChapterTypeDB> =>
 }
 
 // return the number of pages
-const getMangasPages = async (): Promise<number> => {
+const getMangasPages = async (client: Client): Promise<number> => {
   try {
-    const client = await getCachedDBClient()
     const res = await client.query(`SELECT COUNT(*) FROM manga`)
     return Math.round(res.rows[0].count / 10)
   } catch (err) {

@@ -1,4 +1,5 @@
 import {getCachedDBClient} from '@manga-naya/cache'
+import {Client} from 'pg'
 
 import type {
   UserType,
@@ -9,18 +10,16 @@ import type {
   ForYouPageType
 } from '@manga-naya/types'
 
-const createUser = async (name: string, email: string, picture: string): Promise<void> => {
+const createUser = async (client: Client, name: string, email: string, picture: string): Promise<void> => {
   try {
-    const client = await getCachedDBClient()
     await client.query(`INSERT INTO Users (email, name, picture) VALUES ($1, $2, $3)`, [email, name, picture])
   } catch (err) {
     console.error('Error creating user:', err)
     throw new Error('Failed to create user')
   }
 }
-const isUserExist = async (email: string): Promise<boolean> => {
+const isUserExist = async (client: Client, email: string): Promise<boolean> => {
   try {
-    const client = await getCachedDBClient()
     const res = await client.query(`SELECT * FROM Users WHERE email = $1`, [email])
     return res.rows.length > 0
   } catch (err) {
@@ -28,9 +27,8 @@ const isUserExist = async (email: string): Promise<boolean> => {
     throw new Error('Failed to check user')
   }
 }
-const getUser = async (email: string): Promise<UserType> => {
+const getUser = async (client: Client, email: string): Promise<UserType> => {
   try {
-    const client = await getCachedDBClient()
     const res = await client.query(`SELECT * FROM Users WHERE email = $1`, [email])
     return res.rows[0]
   } catch (err) {
@@ -39,9 +37,8 @@ const getUser = async (email: string): Promise<UserType> => {
   }
 }
 
-const removeUser = async (email: string): Promise<void> => {
+const removeUser = async (client: Client, email: string): Promise<void> => {
   try {
-    const client = await getCachedDBClient()
     await client.query(`DELETE FROM Users WHERE email = $1`, [email])
   } catch (err) {
     console.error('Error removing user:', err)
@@ -49,9 +46,8 @@ const removeUser = async (email: string): Promise<void> => {
   }
 }
 
-const getHistory = async (userId: number): Promise<HistoryType[]> => {
+const getHistory = async (client: Client, userId: number): Promise<HistoryType[]> => {
   try {
-    const client = await getCachedDBClient()
     const res = await client.query(`SELECT * FROM history WHERE user_id = $1`, [userId])
     return res.rows
   } catch (err) {
@@ -60,9 +56,8 @@ const getHistory = async (userId: number): Promise<HistoryType[]> => {
   }
 }
 
-const getReadingList = async (userId: number): Promise<ReadingListType[]> => {
+const getReadingList = async (client: Client, userId: number): Promise<ReadingListType[]> => {
   try {
-    const client = await getCachedDBClient()
     const res = await client.query(`SELECT * FROM reading_list WHERE user_id = $1`, [userId])
     return res.rows
   } catch (err) {
@@ -71,9 +66,8 @@ const getReadingList = async (userId: number): Promise<ReadingListType[]> => {
   }
 }
 
-const getFavorites = async (userId: number): Promise<FavoritesType[]> => {
+const getFavorites = async (client: Client, userId: number): Promise<FavoritesType[]> => {
   try {
-    const client = await getCachedDBClient()
     const res = await client.query(`SELECT * FROM favorites WHERE user_id = $1`, [userId])
     return res.rows
   } catch (err) {
@@ -82,9 +76,8 @@ const getFavorites = async (userId: number): Promise<FavoritesType[]> => {
   }
 }
 
-const insertHistory = async (userId: number, chapterId: number, mangaId: number): Promise<void> => {
+const insertHistory = async (client: Client, userId: number, chapterId: number, mangaId: number): Promise<void> => {
   try {
-    const client = await getCachedDBClient()
     await client.query(`INSERT INTO history (user_id, chapter_id, manga_id) VALUES ($1, $2, $3)`, [userId, chapterId, mangaId])
   } catch (err) {
     console.error('Error inserting history:', err)
@@ -92,9 +85,8 @@ const insertHistory = async (userId: number, chapterId: number, mangaId: number)
   }
 }
 
-const removeHistory = async (historyId: number): Promise<void> => {
+const removeHistory = async (client: Client, historyId: number): Promise<void> => {
   try {
-    const client = await getCachedDBClient()
     await client.query(`DELETE FROM history WHERE id = $1`, [historyId])
   } catch (err) {
     console.error('Error removing history:', err)
@@ -102,10 +94,8 @@ const removeHistory = async (historyId: number): Promise<void> => {
   }
 }
 
-const toggleReading = async (userId: number, mangaId: number): Promise<void> => {
+const toggleReading = async (client: Client, userId: number, mangaId: number): Promise<void> => {
   try {
-    const client = await getCachedDBClient()
-    
     // Check if entry already exists
     const {rows} = await client.query(
       `SELECT id FROM reading_list WHERE user_id = $1 AND manga_id = $2`,
@@ -129,10 +119,8 @@ const toggleReading = async (userId: number, mangaId: number): Promise<void> => 
   }
 }
 
-const toggleFav = async (userId: number, mangaId: number): Promise<void> => {
+const toggleFav = async (client: Client, userId: number, mangaId: number): Promise<void> => {
   try {
-    const client = await getCachedDBClient()
-    
     // Check if entry already exists
     const {rows} = await client.query(
       `SELECT id FROM favorites WHERE user_id = $1 AND manga_id = $2`,
@@ -156,10 +144,8 @@ const toggleFav = async (userId: number, mangaId: number): Promise<void> => {
   }
 }
 
-const getStats = async (userId: number): Promise<UserProfileStatsType> => {
+const getStats = async (client: Client, userId: number): Promise<UserProfileStatsType> => {
   try {
-    const client = await getCachedDBClient()
-
     const query = `
       WITH
       top_genres AS (
@@ -243,10 +229,8 @@ const getStats = async (userId: number): Promise<UserProfileStatsType> => {
   }
 }
 
-const getForYouPage = async (userId: number): Promise<ForYouPageType> => {
+const getForYouPage = async (client: Client, userId: number): Promise<ForYouPageType> => {
   try {
-    const client = await getCachedDBClient()
-
     // PART A: Find user’s top genres from reading history
     const userTopGenresQuery = `
       WITH user_genre_counts AS (

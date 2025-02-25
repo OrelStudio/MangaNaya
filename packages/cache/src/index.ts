@@ -82,6 +82,7 @@ const getCachedS3Client = async (): Promise<S3Client> => {
 
 export {
   getCachedDBClient,
+  getDBClient,
 
   getCachedRedisClient,
   getRedisClient,

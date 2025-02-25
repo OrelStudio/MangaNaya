@@ -1,4 +1,15 @@
-import {getCachedDBClient} from '@manga-naya/cache'
+import {getDBClient} from '@manga-naya/cache'
+
+const dbClient = await getDBClient()
+
+const getCachedDBClient = async () => {
+  return dbClient.client
+}
+
+process.on('SIGINT', dbClient.close)
+process.on('SIGKILL', dbClient.close)
+process.on('SIGTERM', dbClient.close)
+process.on('exit', dbClient.close)
 
 import type {
   MangaTypeDB,

@@ -1,5 +1,6 @@
 import amqplib from 'amqplib'
 import {getCachedRedisClient, getCachedRabbitClient} from '@manga-naya/cache'
+import type {RedisType} from '@manga-naya/cache'
 import {searchManga} from '../db'
 
 import APIError from '../Errors'
@@ -17,16 +18,14 @@ const requestScrape = (channel: amqplib.Channel, query: string) => {
   })
 }
 
-const searchQuery = async (query: string, userId: number): Promise<MangaTypeDB[]> => {
+const searchQuery = async (query: string, userId: number, redisClient: RedisType): Promise<MangaTypeDB[]> => {
   if (!query) {
     throw new Error('Query is empty')
   }
   console.log(`Received search query:`, query)
   const mangas = await searchManga(query, userId)
-
-  const redisClient = await getCachedRedisClient()
+  
   const cache = await redisClient.get(`s-${query}`)
-
   console.log(`Cache: ${cache}`)
   
 

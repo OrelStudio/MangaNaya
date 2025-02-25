@@ -24,10 +24,6 @@ const Read = ({user}: {user: UserType}) => {
   }
 
   const {loading, error, data} = useChapter(pageInt ?? 1)
-
-  if (error) {
-    return <div>Something went wrong</div>
-  }
   
   return (
     <div>

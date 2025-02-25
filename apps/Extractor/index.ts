@@ -1,5 +1,5 @@
 import amqplib from 'amqplib'
-import {getCachedRedisClient, initRabbitConnection, getCachedSSMClient} from '@manga-naya/cache'
+import {getCachedRedisClient, initRabbitConnection, getCachedSSMClient, getRedisClient} from '@manga-naya/cache'
 import listenToQueue from './src/rabbit'
 import downloadChapter from './src/downloadChapter'
 import downloadThumbnail from './src/downloadThumbnail'
@@ -46,18 +46,18 @@ if (!MAX_CHAPTERS || !MAX_THUMBNAILS) {
   throw new Error('ENV is not set')
 }
 
+const redisClient = await getRedisClient()
+
 const chapterHandler = async(query: ExtractRequestType) => {
-  const redisClient = await getCachedRedisClient()
-  await redisClient.set(`c-${query.name}-${query.index}`, 'true')
+  await redisClient.client.set(`c-${query.name}-${query.index}`, 'true')
   await downloadChapter({source: query.source, index: query.index, link: query.link, name: query.name})
-  await updateState(redisClient, `c-${query.name}-${query.index}`)
+  await updateState(redisClient.client, `c-${query.name}-${query.index}`)
 }
 
 const thumbnailHandler = async(query: ThumbnailRequestType) => {
-  const redisClient = await getCachedRedisClient()
-  await redisClient.set(`s-${query.name}`, 'true')
+  await redisClient.client.set(`s-${query.name}`, 'true')
   await downloadThumbnail(query.thumbnailLink, query.name)
-  await updateState(redisClient, `s-${query.name}`)
+  await updateState(redisClient.client, `s-${query.name}`)
 }
 
 initRabbitConnection().then(async (connection) => {
@@ -70,6 +70,7 @@ initRabbitConnection().then(async (connection) => {
     console.log(' [*] Exiting')
     await closeChapterChannel()
     await closeThumbnailChannel()
+    await redisClient.close()
     await connection.close()
   }
 

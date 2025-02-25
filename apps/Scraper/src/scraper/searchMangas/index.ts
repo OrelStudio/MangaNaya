@@ -1,5 +1,8 @@
 import {JSDOM} from 'jsdom'
 import getHeaders from '../headers/getHeaders'
+import requestHTML from '../requestHTML'
+import {getCachedRedisClient} from '@manga-naya/cache'
+import type {RedisType} from '@manga-naya/cache'
 
 import {MangaItemType} from '@manga-naya/types'
 type MangaType = Omit<MangaItemType, 'genres' | 'description'> & { source: 'kakalot' | 'mangagojo' }
@@ -32,9 +35,9 @@ const searchMangas = (source: SourceType, query: string, page: number): Promise<
   const cleanQuery = query.replace(/ /g, '_')
 
   const headers = getHeaders()
-  return fetch(sourcesInfo[source].url(cleanQuery, page), {headers}).then((response) => response.text()).then((res: any) => {
+  return requestHTML(sourcesInfo[source].url(cleanQuery, page), headers).then((res) => {
     // creating a dom from HTML string
-    const dom = new JSDOM(res.data)
+    const dom = new JSDOM(res)
 
     // Mangas on the page
     const items = [...dom.window.document.querySelectorAll(sourcesInfo[source].items)]
@@ -67,7 +70,7 @@ const searchMangas = (source: SourceType, query: string, page: number): Promise<
   })
 }
 
-const search = async (query: string, page: number): Promise<MangaType[]> => {
+const search = async (query: string, page: number, redisClient: RedisType): Promise<MangaType[]> => {
   const mangasKakalot = await searchMangas('kakalot', query, page)
   const mangasMangagojo = await searchMangas('mangagojo', query, page)
 
@@ -75,6 +78,11 @@ const search = async (query: string, page: number): Promise<MangaType[]> => {
   const mangas = mangasKakalot.concat(mangasMangagojo.filter(manga => {
     return !mangasKakalot.some(mangaKakalot => mangaKakalot.name === manga.name)
   }))
+
+  if (mangas.length === 0) {
+    console.log(`No mangas found for query: ${query}`)
+    await redisClient.del(`s-${query}`)
+  }
 
   return mangas
 }

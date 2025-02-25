@@ -2,13 +2,44 @@
 const nextConfig = {
   // set up images for local development, inside D:\Manga\Storage
   images: {
-    domains: [
-      'manganaya.com',
-      'img.manganaya.com',
-      'googleusercontent.com',
-      'lh3.googleusercontent.com',
-      '*.googleusercontent.com',
-    ],
+    // domains: [
+    //   'manganaya.com',
+    //   'img.manganaya.com',
+    //   'googleusercontent.com',
+    //   'lh3.googleusercontent.com',
+    //   '*.googleusercontent.com',
+    //   ...(process.env.NODE_ENV === 'development' ? ['localhost:8000'] : [])
+    // ],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'manganaya.com',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'img.manganaya.com',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'googleusercontent.com',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        pathname: '**',
+      },
+      ...(process.env.NODE_ENV === 'development' ? [
+        {
+          protocol: 'http',
+          hostname: 'localhost',
+          port: '8000',
+          pathname: '**',
+        }
+      ] : [])
+    ]
   },
   output: 'standalone', // for docker
   env: {

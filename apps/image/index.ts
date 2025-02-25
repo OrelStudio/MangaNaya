@@ -18,8 +18,8 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions))
-app.use('/panel', auth) // uncomment this line to enable authentication
-app.use('/thumbnail', auth) // uncomment this line to enable authentication
+// app.use('/panel', auth) // uncomment this line to enable authentication
+// app.use('/thumbnail', auth) // uncomment this line to enable authentication
 
 app.get('/panel/:id', async(c) => {
   try {
@@ -41,6 +41,7 @@ app.get('/thumbnail/:id', async(c) => {
     return c.newResponse(thumbnail)
   } catch (e) {
     c.status(500)
+    console.log('Error while getting thumbnail:', e)
     return c.json({message: 'Something went wrong :('})
   }
 })

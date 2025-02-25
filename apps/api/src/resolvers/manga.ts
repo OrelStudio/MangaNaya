@@ -8,6 +8,7 @@ import {
 } from '../db'
 
 import type {Context} from 'hono'
+import {getRedisClient} from '@manga-naya/cache'
 
 import APIError from '../Errors'
 
@@ -15,6 +16,13 @@ import searchQuery from '../controllers/search'
 import getChapter from '../controllers/chapter'
 
 import type {PageType, MangaQL, ChaptersQL, ChapterResultsType, ChapterTypeDB} from '@manga-naya/types'
+
+const redisClient = await getRedisClient()
+
+process.on('SIGINT', redisClient.close)
+process.on('SIGKILL', redisClient.close)
+process.on('SIGTERM', redisClient.close)
+process.on('exit', redisClient.close)
 
 const omit = <T>(obj: T, keys: (keyof T)[]) => {
   const result = {...obj}
@@ -27,7 +35,7 @@ const omit = <T>(obj: T, keys: (keyof T)[]) => {
 const chapter = async ({id}: {id: number}, c: Context): Promise<ChaptersQL> => {
   try {
     const user = await c.get('user')
-    const {chapter, manga} = await getChapter(id, user.id)
+    const {chapter, manga} = await getChapter(id, user.id, redisClient.client)
     const safeChapter = omit(chapter, ['chapter_link', 'source'])
 
     // Add the chapter to user's history
@@ -70,7 +78,7 @@ const manga = async ({id}: {id: number}, c: Context): Promise<MangaQL> => {
 const search = async ({query}: {query: string}, c: Context): Promise<MangaQL[]> => {
   try {
     const user = await c.get('user')
-    const mangas = await searchQuery(query, user.id)
+    const mangas = await searchQuery(query, user.id, redisClient.client)
     return mangas.map((manga) => ({
       ...manga,
       chapters: async (): Promise<ChapterTypeDB[]> => await chapters(manga.id, user.id)

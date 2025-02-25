@@ -1,5 +1,6 @@
 import amqplib from 'amqplib'
 import {getCachedRedisClient, getCachedRabbitClient} from '@manga-naya/cache'
+import type {RedisType} from '@manga-naya/cache'
 import {getChapter as chapter, getManga} from '../db'
 import type {ChapterTypeDB, MangaTypeDB} from '@manga-naya/types'
 
@@ -21,7 +22,7 @@ const requestChapter = (
   })
 }
 
-const getChapter = async (id: number, userId: number): Promise<{chapter: ChapterTypeDB, manga: MangaTypeDB}> => {
+const getChapter = async (id: number, userId: number, redisClient: RedisType): Promise<{chapter: ChapterTypeDB, manga: MangaTypeDB}> => {
   try {
     const requestedChapter = await chapter(id, userId)
     
@@ -32,7 +33,6 @@ const getChapter = async (id: number, userId: number): Promise<{chapter: Chapter
     if (!manga) {
       throw new APIError('Error', 404)
     }
-    const redisClient = await getCachedRedisClient()
     const cache = await redisClient.get(`c-${manga.name}-${requestedChapter.chapter_number}`)
 
     // if there chapter is not available, request it and save it to the cache if it's not already there
