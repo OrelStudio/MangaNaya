@@ -12,6 +12,7 @@
   COPY apps/Extractor/package.json ./apps/extractor/package.json
   WORKDIR /app/apps/extractor
   RUN bun install
+  RUN bunx puppeteer browsers install chrome
   COPY apps/Extractor /app/apps/extractor/
   RUN bunx tsup index.ts --out-dir=dist --minify --dts --format=esm --clean
   

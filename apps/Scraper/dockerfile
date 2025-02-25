@@ -12,6 +12,7 @@
   COPY apps/Scraper/package.json ./apps/Scraper/package.json
   WORKDIR /app/apps/Scraper
   RUN bun install
+  RUN bunx puppeteer browsers install chrome
   COPY apps/Scraper /app/apps/Scraper/
   RUN bunx tsup index.ts --out-dir=dist --minify --dts --format=esm --clean
   
