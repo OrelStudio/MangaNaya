@@ -33,6 +33,20 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # Build "Scraper" app
+      - name: Build Scraper Docker image
+        run: |
+          docker build \
+            --build-arg NODE_ENV=production \
+            --build-arg AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+            --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+            --build-arg AWS_REGION=${{ secrets.AWS_REGION }} \
+            -t scraper:latest -f apps/Scraper/Dockerfile .
+          docker tag scraper:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/scraper:latest
+      - name: Push Scraper Docker image
+        run: |
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/scraper:latest
+
       # Build and push "web" app
       - name: Build Web Docker image
         run: |
@@ -83,20 +97,6 @@ jobs:
       - name: Push Image Docker image
         run: |
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/image:latest
-
-      # Build "Scraper" app
-      - name: Build Scraper Docker image
-        run: |
-          docker build \
-            --build-arg NODE_ENV=production \
-            --build-arg AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
-            --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
-            --build-arg AWS_REGION=${{ secrets.AWS_REGION }} \
-            -t scraper:latest -f apps/Scraper/Dockerfile .
-          docker tag scraper:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/scraper:latest
-      - name: Push Scraper Docker image
-        run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/scraper:latest
 
       # Deploy Kubernetes manifests to EKS
       # This assumes EKS cluster already exists.
