@@ -45,6 +45,8 @@
   
   # 3) IMPORTANT: Copy the local packages so symlinks aren't broken
   COPY --from=builder /app/packages ./packages
+
+  COPY --from=builder /root/.cache/puppeteer /home/nextjs/.cache/puppeteer
   
   EXPOSE 3000
   CMD ["bun", "run", "./dist/index.js"]
