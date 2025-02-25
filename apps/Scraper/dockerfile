@@ -14,6 +14,7 @@
   RUN bun install
   RUN bunx puppeteer browsers install chrome
   COPY apps/Scraper /app/apps/Scraper/
+  RUN bun run node_modules/puppeteer/install.mjs
   RUN bunx tsup index.ts --out-dir=dist --minify --dts --format=esm --clean
   
   # ----------------------
