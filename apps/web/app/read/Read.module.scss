@@ -10,6 +10,10 @@
 }
 
 .chapter {
+  /*
+   * The commented code below is for reference,
+   * to when we will want to implement a horizontal scroll when reading a chapter.
+  **/
   // width: calc(100vw - (vw * 1.5));
 
   // display: flex;
@@ -17,17 +21,14 @@
   // overflow-x: scroll;
   // width: 100%;  /* Make sure the container takes full width */
   // height: 100vh;  /* Optional: Set the container height if needed */
-  // direction: rtl;;
+  // direction: rtl;
 
   img {
     min-height: min-content;
     flex-shrink: 0;
     flex-grow: 0;
-    // width: 70vw;
     height: 90%;
     object-fit: cover;
-    // padding: 0 50px;
-    // margin-left: 55px;
   }
 }
 

@@ -8,9 +8,10 @@ import Title from './Title'
 import usePrevious from '../hooks/usePrevious'
 import useDataLinger from '../hooks/useDataLinger'
 
+import type {ChapterTypeWeb} from '@manga-naya/types'
+
 import styles from './Read.module.scss'
 
-import type {ChapterTypeWeb} from '@manga-naya/types'
 
 const GET_CHAPTERS = (id: number) => gql`
   query GetChapters {
@@ -56,15 +57,6 @@ const ChapterInfo = ({mangaId, mangaName, chapterNumber, isLoading}: ChapterInfo
 
   const currentChapter = useMemo(() => chapterNumber || prevNumber, [chapterNumber, prevNumber])
   const currentName = useMemo(() => mangaName || prevName, [mangaName, prevName])
-  const currentId = useMemo(() => {
-    if (!data?.manga.chapters) {
-      return null
-    }
-    return data?.manga.chapters.find((chapter: ChapterTypeWeb) => chapter.chapter_number === currentChapter)?.id
-  }
-  , [data, currentChapter])
-
-  console.log(data);
   
   return (
     <div className={styles.info}>
@@ -101,7 +93,6 @@ const ChapterInfo = ({mangaId, mangaName, chapterNumber, isLoading}: ChapterInfo
             defaultValue={`Chapter ${currentChapter}`}
           />}
         </ConfigProvider>
-        {/* <ChapterPagination chapters={data?.manga.chapters || null} current={currentChapter} isLoading={isLoading && loading} /> */}
       </div>
     </div>
   )
