@@ -11,7 +11,7 @@
 }
 
 .username {
-  font-size: 5rem;
+  font-size: 3rem;
   font-family: "Merriweather Sans", serif;
   font-optical-sizing: auto;
   font-weight: 700;
@@ -38,4 +38,10 @@
   padding: 1rem;
   width: 100%;
   padding-top: 15px;
+}
+
+@media (max-width: 592px) {
+  .username {
+    font-size: 2rem;
+  }
 }
