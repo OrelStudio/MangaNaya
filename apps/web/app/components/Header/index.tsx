@@ -103,7 +103,7 @@ const Header = ({user, page}: HeaderProps) => {
   return (
     <div className={styles.header}>
       <div className={styles.title}>
-        <span>MangaNaya</span>
+        <Link href='/'>MangaNaya</Link>
       </div>
 
       <div className={styles.navigation}>

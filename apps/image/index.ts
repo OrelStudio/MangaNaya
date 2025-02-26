@@ -18,8 +18,8 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions))
-// app.use('/panel', auth) // uncomment this line to enable authentication
-// app.use('/thumbnail', auth) // uncomment this line to enable authentication
+app.use('/panel', auth)
+app.use('/thumbnail', auth)
 
 app.get('/panel/:id', async(c) => {
   try {
