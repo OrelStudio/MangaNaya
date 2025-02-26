@@ -42,8 +42,6 @@ const useChapter = (id: number) => {
     interval: 5000
   })
 
-  console.log(data?.chapter);
-
   return {
     loading: error?.message.includes('requested') || loading,
     error,
