@@ -17,14 +17,12 @@ const sourcesInfo = {
     url: (query: string, page: number) => `https://mangakakalot.com/search/story/${query}?page=${page}`,
     items: '.story_item',
     title: '.story_name a',
-    latest: '.list-story-item-wrap-chapter',
     thumbnail: 'img'
   },
   mangagojo: {
     url: (query: string, page: number) => `https://mangagojo.com/page/${page}/?s=${query}`,
     items: '.bs',
     title: '.tt',
-    latest: '.Manga li a',
     thumbnail: 'img'
   }
 }

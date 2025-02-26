@@ -1,5 +1,5 @@
 import amqplib from 'amqplib'
-import {getCachedRedisClient, initRabbitConnection, getCachedSSMClient} from '@manga-naya/cache'
+import {getRedisClient, initRabbitConnection, getCachedSSMClient} from '@manga-naya/cache'
 import listenToQueue from './src/rabbit'
 import scrapeQuery from './src/scrapeQuery'
 
@@ -29,6 +29,8 @@ const extractorQueue = 'thumbnail'
 // The queue to request more data from the scraper
 const scraperQueue = 'scraper'
 
+const redisClient = await getRedisClient()
+
 // Connect to RabbitMQ
 initRabbitConnection().then(async (connection) => {
   const channel = await connection.createChannel()
@@ -39,7 +41,7 @@ initRabbitConnection().then(async (connection) => {
     if (!query) {
       return
     }
-    await scrapeQuery(channel, extractorQueue, DELAY, query)
+    await scrapeQuery(channel, extractorQueue, DELAY, redisClient.client, query)
   }
 
   // Listen to the scraper queue
@@ -49,6 +51,7 @@ initRabbitConnection().then(async (connection) => {
     console.log(' [*] Exiting')
     closeChannel().then(() => {
       connection.close()
+      redisClient.close()
     })
   }
 

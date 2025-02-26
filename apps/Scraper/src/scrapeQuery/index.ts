@@ -1,6 +1,7 @@
 import amqplib from 'amqplib'
 import {from, of, defer, catchError} from 'rxjs'
 import {mergeMap, concatMap, delay, tap} from 'rxjs/operators'
+import {RedisType} from '@manga-naya/cache'
 
 import {insertManga, updateManga, insertChapter} from '../saver/db'
 
@@ -98,10 +99,11 @@ const scrapeQuery = async (
   channel: amqplib.Channel,
   queue: string,
   delayTime: number,
+  redisClient: RedisType,
   query: string
 ): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
-    from(search(query, 1)).pipe(
+    from(search(query, 1, redisClient)).pipe(
       mergeMap((mangas) => createMangaObservable(mangas, delayTime, channel, queue))
     ).subscribe({
       complete: () => {
