@@ -8,7 +8,7 @@
   font-family: "Fredoka", sans-serif;
 }
 
-$fontSize: clamp(2.2rem, 2.5vw, 2.5rem);
+$fontSize: clamp(2rem, 2vw, 2.5rem);
 
 .dropdown {
   display: flex;
@@ -30,9 +30,7 @@ $fontSize: clamp(2.2rem, 2.5vw, 2.5rem);
   width: fit-content;
   font-weight: bold;
   
-  span {
-    font-size: $fontSize;
-  }
+  font-size: $fontSize;
 }
 
 .navigation {
@@ -97,6 +95,7 @@ $fontSize: clamp(2.2rem, 2.5vw, 2.5rem);
     -moz-user-drag: none;
     -o-user-drag: none;
     user-drag: none;
+    border-radius: 50%;
   }
 }
 

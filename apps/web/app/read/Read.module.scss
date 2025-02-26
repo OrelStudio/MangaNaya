@@ -23,11 +23,11 @@
     min-height: min-content;
     flex-shrink: 0;
     flex-grow: 0;
-    width: 70vw;
+    // width: 70vw;
     height: 90%;
     object-fit: cover;
     // padding: 0 50px;
-    margin-left: 55px;
+    // margin-left: 55px;
   }
 }
 
@@ -35,6 +35,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: var(--text);
   >:not(:last-child) {
     margin-bottom: 10px;
   }
@@ -44,17 +45,34 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: "Knewave", system-ui;
+  font-family: "Francois One", sans-serif;
   font-weight: 400;
   font-style: normal;
   line-height: 45px;
 
   .name {
-    font-size: 3rem;
+    font-size: 2rem;
   }
 
   .number {
     font-style: normal;
     font-size: 2rem;
+  }
+}
+
+.pagination {
+  display: flex;
+  flex-direction: column;
+}
+
+.select {
+  width: 120px;
+}
+
+@media (max-width: 550px) {
+  .chapter {
+    img {
+      width: 100vw;
+    }
   }
 }
