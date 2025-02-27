@@ -22,7 +22,14 @@ const sourcesInfo = {
     item: '.chapternum',
     genres: '.info-desc a',
     description: '.info-desc p',
-  }
+  },
+  chapmanganato: {
+    chapters: '.row-content-chapter li',
+    link: 'a',
+    item: 'a',
+    genres: 'tr:nth-child(4) > td.table-value a',
+    description: '.panel-story-info-description',
+  },
 }
 
 type SourceType = keyof typeof sourcesInfo
@@ -37,8 +44,6 @@ const getChapters = (source: SourceType, link: string): Promise<ChapterType[]> =
     const descriptionE = dom.window.document.querySelector(sourcesInfo[source].description) as HTMLElement
     
     const genres = genresE.map(genre => genre.textContent ? genre.textContent.trim() : null).filter((text): text is string => text !== null)
-
-    console.log(genres)
     
     const description = source === 'kakalot' ? (
       (descriptionE?.textContent?.split('summary:')[1].trim() ?? '')

@@ -32,7 +32,6 @@ const auth = async (c: Context, next: Next) => {
   // const token = c.req.header('Authorization')
   // get the cookie called Authorization from the request
   const token = await getCookie(c, 'Authorization')
-  console.log(token)
   
   if (!token) {
     c.status(401)

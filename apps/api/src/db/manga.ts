@@ -48,8 +48,6 @@ const getMangas = async (client: Client, page: number, userId: number): Promise<
       thumbnail: await getThumbnail(manga.id),
     })))
 
-    console.log('get mangas browse:', result)
-
     return result
   } catch (err) {
     console.error('Error getting mangas:', err)

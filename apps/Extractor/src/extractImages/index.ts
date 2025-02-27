@@ -133,7 +133,7 @@ const extractImages = async (
     })
 
     try {
-      await page.goto(link, { waitUntil: 'networkidle2' })
+      await page.goto(link, {waitUntil: 'networkidle2'})
       await page.setViewport({ width: 62, height: 10000 })
 
       // Wait for all images to load

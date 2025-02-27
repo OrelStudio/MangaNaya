@@ -115,7 +115,6 @@ const history = async (userId: number): Promise<History[]> => {
 
 const user = async ({email}: {email: string}): Promise<User> => {
   const userResult = await getUser(email)
-  console.log(userResult)
   return {
     ...userResult,
     history: async() => await history(userResult.id),

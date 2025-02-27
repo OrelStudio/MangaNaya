@@ -26,8 +26,6 @@ const searchQuery = async (query: string, userId: number, redisClient: RedisType
   const mangas = await searchManga(query, userId)
   
   const cache = await redisClient.get(`s-${query}`)
-  console.log(`Cache: ${cache}`)
-  
 
   if (cache === null) {
     // Request the scraper to search for more mangas  

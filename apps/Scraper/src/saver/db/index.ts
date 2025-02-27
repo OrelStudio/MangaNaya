@@ -96,7 +96,6 @@ const insertChapter = async (mangaName: string, chapterNumber: number, chapterLi
   try {
     const doesExist = await isChapterExists(mangaName, chapterNumber)
     if (doesExist) {
-      console.log(`Chapter with manga name '${mangaName}' and chapter number '${chapterNumber}' already exists`)
       return
     }
     const client = await getCachedDBClient()
@@ -113,8 +112,6 @@ const insertChapter = async (mangaName: string, chapterNumber: number, chapterLi
     // Insert the chapter using the fetched mangaId wtih available set to false
     const chapterQuery = `INSERT INTO chapter (manga_id, chapter_number, chapter_link, available, length, source) VALUES ($1, $2, $3, $4, $5, $6)`
     await client.query(chapterQuery, [mangaId, chapterNumber, chapterLink, false, 0, source])
-
-    console.log('Chapter inserted successfully')
   } catch (err) {
     console.error('Error inserting chapter:', err)
     throw new Error('Failed to insert chapter')

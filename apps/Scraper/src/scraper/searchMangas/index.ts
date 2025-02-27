@@ -14,7 +14,7 @@ type MangaType = Omit<MangaItemType, 'genres' | 'description'> & { source: 'kaka
 
 const sourcesInfo = {
   kakalot: {
-    url: (query: string, page: number) => `https://mangakakalot.com/search/story/${query}?page=${page}`,
+    url: (query: string, page: number) => `https://mangakakalot.gg/search/story/${query}?page=${page}`,
     items: '.story_item',
     title: '.story_name a',
     thumbnail: 'img'

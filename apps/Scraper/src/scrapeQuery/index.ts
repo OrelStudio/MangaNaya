@@ -45,20 +45,17 @@ const createChapterObservable = (
     concatMap((chapter) => {
       return of(chapter).pipe(
         tap(() => {
-          console.log(`Chapter Save: Saving Raw data: ${mangaName} chapter ${chapter.index}`)
           updateManga(mangaName, chapter.genres, chapter.description).then(() => {
-            console.log(`Updated manga ${mangaName} with genres and description`)
           }).catch((error) => {
             console.error('Failed to update manga', error)
           })
         }),
         // send a message to the queue
         mergeMap(async () => await insertChapter(mangaName, chapter.index, chapter.link, source)),
-        tap(() => console.log(`Requested Chapter ${chapter.index}`))
       )},
     ),
     tap({
-      complete: () => console.log(`Finished requesting all chapters for ${mangaName}`),
+      complete: () => console.log(`Finished requesting all chapters for ${mangaName}, chapters: ${chapters.length}`),
     }),
     catchError((error, caught) => {
       console.error('Failed to get chapters', error)
@@ -79,7 +76,7 @@ const createMangaObservable = (
         console.log(`Starting to Request ${manga.name}`)
         return from(getChapters(manga.source, manga.linkToManga)).pipe(
           tap(async(chapters) => {
-            console.log(`Finished Requesting ${manga.name}`)
+            console.log(`Finished Requesting ${manga.name} chapters: ${chapters.length}, source: ${manga.source}, link: ${manga.linkToManga}`)
             requestThumbnail(channel, queue, manga.source, manga.name, manga.thumbnailLink)
             await insertManga(manga.name)
           }),

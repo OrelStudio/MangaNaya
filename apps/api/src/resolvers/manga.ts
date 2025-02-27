@@ -95,7 +95,6 @@ const search = async ({query}: {query: string}, c: Context): Promise<MangaQL[]> 
 const page = async ({page}: {page: number}, c: Context): Promise<PageType> => {
   try {
     const user = await c.get('user')
-    console.log(user)
     const lastPage = await getMangasPages()
     const mangas = await getMangas(page, user.id)
 

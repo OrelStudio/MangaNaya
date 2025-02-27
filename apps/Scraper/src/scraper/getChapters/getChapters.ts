@@ -24,4 +24,5 @@ interface ChapterType extends ChapterResultsType {
 //   })
 // })
 
-getChapters('kakalot', 'https://www.mangakakalot.gg/manga/one-piece').then(console.log).catch(console.error)
+// getChapters('kakalot', 'https://www.mangakakalot.gg/manga/naruto').then(console.log).catch(console.error)
+getChapters('kakalot', 'https://www.mangakakalot.gg/manga/naruto-the-seventh-hokage-reborn').then(console.log).catch(console.error)
