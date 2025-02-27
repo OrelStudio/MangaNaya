@@ -20,6 +20,7 @@ type ThumbnailRequestType = {
   source: SourceType
   name: string
   thumbnailLink: string
+  linkToManga: string
 }
 
 // Removes the key from the cache
@@ -56,7 +57,7 @@ const chapterHandler = async(query: ExtractRequestType) => {
 
 const thumbnailHandler = async(query: ThumbnailRequestType) => {
   await redisClient.client.set(`s-${query.name}`, 'true')
-  await downloadThumbnail(query.thumbnailLink, query.name)
+  await downloadThumbnail(query.thumbnailLink, query.name, query.linkToManga)
   await updateState(redisClient.client, `s-${query.name}`)
 }
 

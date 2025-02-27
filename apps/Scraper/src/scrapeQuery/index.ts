@@ -22,12 +22,14 @@ const requestThumbnail = (
   queue: string, // queue to request the thumbnail from
   source: SourceType,
   name: string,
-  thumbnailLink: string
+  thumbnailLink: string,
+  linkToManga: string
 ) => {
   const message = JSON.stringify({
     source,
     name, // manga name
-    thumbnailLink
+    thumbnailLink,
+    linkToManga
   })
 
   console.log(`[x] Requesting Thumbnail for ${name}`)
@@ -77,7 +79,7 @@ const createMangaObservable = (
         return from(getChapters(manga.source, manga.linkToManga)).pipe(
           tap(async(chapters) => {
             console.log(`Finished Requesting ${manga.name} chapters: ${chapters.length}, source: ${manga.source}, link: ${manga.linkToManga}`)
-            requestThumbnail(channel, queue, manga.source, manga.name, manga.thumbnailLink)
+            requestThumbnail(channel, queue, manga.source, manga.name, manga.thumbnailLink, manga.linkToManga)
             await insertManga(manga.name)
           }),
           mergeMap((chapters) => createChapterObservable(chapters, manga.name, manga.source)),
