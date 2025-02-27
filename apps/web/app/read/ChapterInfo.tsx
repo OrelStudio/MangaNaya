@@ -2,7 +2,9 @@ import {useCallback, useMemo} from 'react'
 import {useRouter} from 'next/navigation'
 import {useQuery, gql} from '@apollo/client'
 import ChapterPagination from './ChapterPagination'
-import {ConfigProvider, Select} from 'antd'
+import Link from 'next/link'
+import {ConfigProvider, Select, Button} from 'antd'
+import {CaretLeftOutlined, CaretRightOutlined} from '@ant-design/icons'
 import Title from './Title'
 
 import usePrevious from '../hooks/usePrevious'
@@ -57,12 +59,24 @@ const ChapterInfo = ({mangaId, mangaName, chapterNumber, isLoading}: ChapterInfo
 
   const currentChapter = useMemo(() => chapterNumber || prevNumber, [chapterNumber, prevNumber])
   const currentName = useMemo(() => mangaName || prevName, [mangaName, prevName])
+  const {previousChapter, nextChapter} = useMemo(() => {
+    if (!data?.manga.chapters) {
+      return {
+        previousChapter: null,
+        nextChapter: null
+      }
+    }
+    const currentIndex = data.manga.chapters.findIndex((chapter: ChapterTypeWeb) => chapter.chapter_number === currentChapter)
+    return {
+      previousChapter: data.manga.chapters[currentIndex - 1]?.id,
+      nextChapter: data.manga.chapters[currentIndex + 1]?.id
+    }
+  }, [data, currentChapter])
   
   return (
     <div className={styles.info}>
       <Title name={currentName} number={currentChapter} />
       <div className={styles.pagination}>
-        <span style={{fontFamily: 'sans-serif'}}>{'Select Chapter'}</span>
         <ConfigProvider
           theme={{
             components: {
@@ -82,16 +96,33 @@ const ChapterInfo = ({mangaId, mangaName, chapterNumber, isLoading}: ChapterInfo
           }}
         >
           
-          {currentChapter && <Select
-            showSearch
-            placeholder="Select chapter"
-            optionFilterProp="label"
-            className={styles.select}
-            dropdownStyle={{backgroundColor: 'var(--strong)'}}
-            onChange={onChange}
-            options={chaptersOptions}
-            defaultValue={`Chapter ${currentChapter}`}
-          />}
+          {currentChapter && (
+            <div className={styles.controls}>
+              {previousChapter && (
+                <Link href={`/read?id=${previousChapter}`}>
+                  <Button shape='circle' icon={<CaretLeftOutlined />} />
+                </Link>
+              )}
+              <div className={styles.selectWrapper}>
+                <span style={{fontFamily: 'sans-serif'}}>{'Select Chapter'}</span>
+                <Select
+                  showSearch
+                  placeholder="Select chapter"
+                  optionFilterProp="label"
+                  className={styles.select}
+                  dropdownStyle={{backgroundColor: 'var(--strong)'}}
+                  onChange={onChange}
+                  options={chaptersOptions}
+                  defaultValue={`Chapter ${currentChapter}`}
+                />
+              </div>
+              {nextChapter && (
+                <Link href={`/read?id=${nextChapter}`}>
+                  <Button shape='circle' icon={<CaretRightOutlined />} />
+                </Link>
+              )}
+            </div>
+          )}
         </ConfigProvider>
       </div>
     </div>
