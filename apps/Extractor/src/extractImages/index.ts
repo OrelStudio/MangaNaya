@@ -108,7 +108,9 @@ const extractImages = async (
   try {
     console.log(`Extracting images from ${link}`)
     const browser = await puppeteer.launch({headless: true})
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     const page = await browser.newPage()
+    await new Promise((resolve) => setTimeout(resolve, 1000))
 
     // Words to filter the images
     const words = ['chapter', `${chapter}`]
@@ -135,8 +137,8 @@ const extractImages = async (
 
     try {
       await page.goto(link, {waitUntil: 'networkidle2'})
+      await new Promise((resolve) => setTimeout(resolve, 1000))
       await page.setViewport({ width: 62, height: 10000 })
-      page.waitForNavigation({waitUntil: "domcontentloaded"})
       await new Promise((resolve) => setTimeout(resolve, 5000))
 
       // Wait for all images to load
