@@ -24,6 +24,7 @@ const requestChapter = (
 
 const getChapter = async (id: number, userId: number, redisClient: RedisType): Promise<{chapter: ChapterTypeDB, manga: MangaTypeDB}> => {
   try {
+    console.log(`Received request for chapter ${id}`)
     const requestedChapter = await chapter(id, userId)
     
     if (!requestedChapter) {
@@ -40,6 +41,7 @@ const getChapter = async (id: number, userId: number, redisClient: RedisType): P
     if (!requestedChapter.available) {
       if (!cache) {
         const channel = await getCachedRabbitClient()
+        await redisClient.set(`c-${manga.name}-${requestedChapter.chapter_number}`, 'true', {EX: 60})
         console.log(`Requesting chapter ${requestedChapter.chapter_number} for ${manga.name}`)
         requestChapter(channel, requestedChapter.source, requestedChapter.chapter_number, requestedChapter.chapter_link, manga.name)
       }

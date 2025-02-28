@@ -31,7 +31,8 @@ const useChapter = (id: number) => {
 
     const timer = setTimeout(() => {
       setShouldPoll(false)
-    }, 30000)
+      // 5 minutes
+    }, 300000)
 
     return () => clearTimeout(timer)
   }, [error])

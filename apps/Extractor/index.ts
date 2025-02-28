@@ -50,15 +50,24 @@ if (!MAX_CHAPTERS || !MAX_THUMBNAILS) {
 const redisClient = await getRedisClient()
 
 const chapterHandler = async(query: ExtractRequestType) => {
-  await redisClient.client.set(`c-${query.name}-${query.index}`, 'true')
-  await downloadChapter({source: query.source, index: query.index, link: query.link, name: query.name})
-  await updateState(redisClient.client, `c-${query.name}-${query.index}`)
+  try {
+    console.log(`Received request for chapter ${query.index} of ${query.name}`)
+    await downloadChapter({source: query.source, index: query.index, link: query.link, name: query.name})
+  } catch (error) {
+    console.error(`Failed to download chapter ${query.index} of ${query.name}`, error)
+  } finally {
+    await updateState(redisClient.client, `c-${query.name}-${query.index}`)
+  }
 }
 
 const thumbnailHandler = async(query: ThumbnailRequestType) => {
-  await redisClient.client.set(`s-${query.name}`, 'true')
-  await downloadThumbnail(query.thumbnailLink, query.name, query.linkToManga)
-  await updateState(redisClient.client, `s-${query.name}`)
+  try {
+    await downloadThumbnail(query.thumbnailLink, query.name, query.linkToManga)
+  } catch (error) {
+    console.error(`Failed to download thumbnail for ${query.name}`, error)
+  } finally {
+    await updateState(redisClient.client, `s-${query.name}`)
+  }
 }
 
 initRabbitConnection().then(async (connection) => {

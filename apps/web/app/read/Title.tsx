@@ -1,4 +1,5 @@
 import {useMemo} from 'react'
+import {Skeleton} from 'antd'
 import usePrevious from '../hooks/usePrevious'
 import useDataLinger from '../hooks/useDataLinger'
 
@@ -11,19 +12,21 @@ interface TitleProps {
 
 const Title = ({name, number}: TitleProps) => {
   const prevName = useDataLinger(usePrevious(name))
-  const prevNumber = useDataLinger(usePrevious(number))
 
   const currentName = useMemo(() => name || prevName, [name, prevName])
-  const currentNumber = useMemo(() => number || prevNumber, [number, prevNumber])
 
-  if (!currentName && !currentNumber) {
+  if (!currentName) {
     return null
   }
 
   return (
     <div className={styles.title}>
       <span className={styles.name}>{currentName}</span>
-      <span className={styles.number}>Chapter {currentNumber}</span>
+      {number ? (
+        <span className={styles.number}>Chapter {number}</span>
+      ) : (
+        <Skeleton.Input style={{width: 100}} active />
+      )}
     </div>
   )
 }

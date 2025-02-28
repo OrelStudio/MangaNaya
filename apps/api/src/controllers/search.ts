@@ -28,9 +28,10 @@ const searchQuery = async (query: string, userId: number, redisClient: RedisType
   const cache = await redisClient.get(`s-${query}`)
 
   if (cache === null) {
-    // Request the scraper to search for more mangas  
+    // Request the scraper to search for more mangas
     const channel = await getCachedRabbitClient()
-    
+    // expire the cache in 2 minutes
+    await redisClient.set(`s-${query}`, 'true', {EX: 120})
     requestScrape(channel, query)
   }
 

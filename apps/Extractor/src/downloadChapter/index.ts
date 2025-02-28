@@ -15,6 +15,10 @@ const downloadChapter = async ({source, index, link, name}: ExtractRequestType) 
   try {
     const panels = await extractImages(source, link, name, index)
 
+    if (panels.length === 0) {
+      throw new Error('No panels found')
+    }
+
     await saveChapter({
       mangaName: name,
       index,
@@ -23,7 +27,7 @@ const downloadChapter = async ({source, index, link, name}: ExtractRequestType) 
     })
     await updateChapter(name, index, true, panels.length)
   } catch (error) {
-    console.error(`Failed to download chapter ${index} of ${name}`, error)
+    throw new Error(`Failed to download chapter ${index} of ${name}: ${error}`)
   }
 }
 

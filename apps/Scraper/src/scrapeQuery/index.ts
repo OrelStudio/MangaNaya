@@ -110,6 +110,7 @@ const scrapeQuery = async (
       },
       error: (err) => {
         reject(err)
+        redisClient.del(`s-${query}`)
       },
     })
   })

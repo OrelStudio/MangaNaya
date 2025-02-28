@@ -21,6 +21,7 @@ const listenToQueue = async <T>(channel: amqplib.Channel, queue: string, max: nu
       console.log(` [x] Received ${JSON.stringify({args})}`)
 
       // push the message to the tube
+      console.log(` [x] Adding to queue ${JSON.stringify({args})}`)
       addToQueue(args)
 
       channel.ack(msg)
