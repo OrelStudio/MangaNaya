@@ -1,0 +1,50 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: "oci-lb"
+    ingress.oci.oraclecloud.com/ssl-certificate-ocid: "ocid1.certificate.oc1.eu-frankfurt-1.amaaaaaawwm3xvyafu4sg42z33qvq5o25iwfnfhmcm33fflwhcoh7dwwoigq"
+spec:
+  rules:
+  - host: manganaya.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web-service
+            port:
+              number: 443
+  - host: www.manganaya.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web-service
+            port:
+              number: 443
+  - host: api.manganaya.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: api-service
+            port:
+              number: 443
+  - host: img.manganaya.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: image-service
+            port:
+              number: 443

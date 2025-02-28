@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: scraper
-        image: 711387099555.dkr.ecr.eu-north-1.amazonaws.com/scraper:latest
+        image: eu-frankfurt-1.ocir.io/friezpm0b3m4/scraper:latest
         ports:
         - containerPort: 8001
 ---

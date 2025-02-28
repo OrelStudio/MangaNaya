@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: extractor
-        image: 711387099555.dkr.ecr.eu-north-1.amazonaws.com/extractor:latest
+        image: eu-frankfurt-1.ocir.io/friezpm0b3m4/extractor:latest
         ports:
         - containerPort: 8002
 ---
