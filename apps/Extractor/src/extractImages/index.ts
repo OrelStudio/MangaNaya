@@ -136,7 +136,7 @@ const extractImages = async (
     })
 
     try {
-      await page.goto(link, {waitUntil: 'networkidle2'})
+      await page.goto(link, {waitUntil: ['domcontentloaded', 'networkidle2'], timeout: 60000})
       await new Promise((resolve) => setTimeout(resolve, 1000))
       await page.setViewport({ width: 62, height: 10000 })
       await new Promise((resolve) => setTimeout(resolve, 5000))
