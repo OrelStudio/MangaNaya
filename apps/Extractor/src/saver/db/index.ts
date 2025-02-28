@@ -110,6 +110,18 @@ const insertPanel = async (mangaName: string, index: number, chapterNumber: numb
 
     const chapterId = chapterRes.rows[0].id
 
+    // check if the panel already exists
+    const isExistQuery = `
+      SELECT * FROM panel
+      WHERE chapter_id = $1 AND index = $2
+    `
+    const isExistRes = await client.query(isExistQuery, [chapterId, index])
+
+    if (isExistRes.rows.length > 0) {
+      console.log('Panel already exists')
+      return
+    }
+
     // Insert the panel using the found chapterId
     const panelQuery = `
       INSERT INTO panel (chapter_id, manga_name, index, chapter_number, file_name)

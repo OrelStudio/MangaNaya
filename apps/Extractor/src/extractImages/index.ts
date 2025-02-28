@@ -106,6 +106,7 @@ const extractImages = async (
   chapter: number
 ): Promise<PanelType[]> => {
   try {
+    console.log(`Extracting images from ${link}`)
     const browser = await puppeteer.launch({headless: true})
     const page = await browser.newPage()
 
@@ -135,6 +136,8 @@ const extractImages = async (
     try {
       await page.goto(link, {waitUntil: 'networkidle2'})
       await page.setViewport({ width: 62, height: 10000 })
+      page.waitForNavigation({waitUntil: "domcontentloaded"})
+      await new Promise((resolve) => setTimeout(resolve, 5000))
 
       // Wait for all images to load
       await page.waitForSelector('img')
@@ -153,16 +156,17 @@ const extractImages = async (
         throw new Error(`Failed to extract images from the page, url: ${link}`)
       }
 
+      console.log(`Extracted ${finalImages.length} images from ${link}`)
       return finalImages
     } catch (error) {
       console.log(`Failed to extract images from the page, url: ${link}`, error)
       await page.close()
       await browser.close()
-      return []
+      throw new Error('Failed')
     }
   } catch (error) {
     console.log(`Failed to launch puppeteer`, error)
-    return []
+    throw new Error('Failed')
   }
 }
 
