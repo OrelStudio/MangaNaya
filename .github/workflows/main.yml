@@ -35,6 +35,11 @@ jobs:
         run: |
           echo "${{ secrets.OCI_AUTH_TOKEN }}" | docker login ${{ secrets.OCI_REGION_KEY }}.ocir.io -u "${{ secrets.OCI_TENANCY_NS }}/orel890x@gmail.com" --password-stdin
 
+      - name: Install OCI CLI
+        run: |
+          curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh | bash -s -- --accept-all-defaults
+          export PATH=$PATH:$HOME/bin
+
       - name: Automatic Tagging of Releases
         id: increment-git-tag
         run: |
@@ -116,5 +121,5 @@ jobs:
       # Deploy Kubernetes manifests to OKE (includes deployments, services, ingress, etc.)
       - name: Deploy to OKE
         run: |
-          kubectl apply -f k8s/
+          kubectl apply -f k8s/ --validate=false
           kubectl rollout status deployment/web-deployment --timeout=90s
