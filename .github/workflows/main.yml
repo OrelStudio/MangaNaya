@@ -30,6 +30,11 @@ jobs:
         with:
           auth_token: ${{ secrets.OCI_AUTH_TOKEN }}
 
+      # Explicit Docker login to ensure authentication is used in subsequent push commands.
+      - name: Docker login to OCI Registry
+        run: |
+          echo "${{ secrets.OCI_AUTH_TOKEN }}" | docker login ${{ secrets.OCI_REGION_KEY }}.ocir.io -u "${{ secrets.OCI_TENANCY_NS }}/orel890x@gmail.com" --password-stdin
+
       - name: Automatic Tagging of Releases
         id: increment-git-tag
         run: |
