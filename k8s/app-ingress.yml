@@ -4,8 +4,9 @@ metadata:
   name: app-ingress
   namespace: default
   annotations:
-    kubernetes.io/ingress.class: "oci-lb"
-    ingress.oci.oraclecloud.com/ssl-certificate-ocid: "ocid1.certificate.oc1.eu-frankfurt-1.amaaaaaawwm3xvyafu4sg42z33qvq5o25iwfnfhmcm33fflwhcoh7dwwoigq"
+    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.regional-static-ip-name: "manganaya-ip"
+    networking.gke.io/managed-certificates: "manganaya-cert"
 spec:
   rules:
   - host: manganaya.com
@@ -17,7 +18,7 @@ spec:
           service:
             name: web-service
             port:
-              number: 443
+              number: 80
   - host: www.manganaya.com
     http:
       paths:
@@ -27,7 +28,7 @@ spec:
           service:
             name: web-service
             port:
-              number: 443
+              number: 80
   - host: api.manganaya.com
     http:
       paths:
@@ -37,7 +38,7 @@ spec:
           service:
             name: api-service
             port:
-              number: 443
+              number: 80
   - host: img.manganaya.com
     http:
       paths:
@@ -47,4 +48,4 @@ spec:
           service:
             name: image-service
             port:
-              number: 443
+              number: 80

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: scraper
-        image: eu-frankfurt-1.ocir.io/friezpm0b3m4/scraper:latest
+        image: gcr.io/ornate-bond-345313/scraper:latest
         ports:
         - containerPort: 8001
 ---

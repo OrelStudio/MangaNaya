@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: image
-        image: eu-frankfurt-1.ocir.io/friezpm0b3m4/image:latest
+        image: gcr.io/ornate-bond-345313/image:latest
         ports:
         - containerPort: 8000
 ---

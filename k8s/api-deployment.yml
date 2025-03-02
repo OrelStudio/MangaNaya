@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: eu-frankfurt-1.ocir.io/friezpm0b3m4/api:latest
+        image: gcr.io/ornate-bond-345313/api:latest
         ports:
         - containerPort: 8080
 ---

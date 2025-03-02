@@ -1,4 +1,4 @@
-name: Build and Deploy to Oracle OKE
+name: Build and Deploy to GKE
 
 on:
   push:
@@ -9,12 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write
     env:
-      OCI_CLI_USER: ${{ secrets.CLI_USER }}
-      OCI_CLI_TENANCY: ${{ secrets.CLI_TENANCY }}
-      OCI_CLI_REGION: ${{ secrets.CLI_REGION }}
-      OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
-      OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -25,20 +24,20 @@ jobs:
       - name: Set up Docker Buildx (for multi-arch build)
         uses: docker/setup-buildx-action@v2
 
-      - name: Log in to Oracle Container Registry
-        uses: oracle-actions/login-ocir@v1.1
+      # Authenticate to Google Cloud using the service account key JSON
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
         with:
-          auth_token: ${{ secrets.OCI_AUTH_TOKEN }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      # Explicit Docker login to ensure authentication is used in subsequent push commands.
-      - name: Docker login to OCI Registry
-        run: |
-          echo "${{ secrets.OCI_AUTH_TOKEN }}" | docker login ${{ secrets.OCI_REGION_KEY }}.ocir.io -u "${{ secrets.OCI_TENANCY_NS }}/orel890x@gmail.com" --password-stdin
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          version: 'latest'
 
-      - name: Install OCI CLI
-        run: |
-          curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh | bash -s -- --accept-all-defaults
-          export PATH=$PATH:$HOME/bin
+      - name: Configure Docker to use gcloud as a credential helper
+        run: gcloud --quiet auth configure-docker
 
       - name: Automatic Tagging of Releases
         id: increment-git-tag
@@ -47,7 +46,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Build "Scraper" app
+      # Build and push "Scraper" image
       - name: Build Scraper Docker image
         run: |
           docker build \
@@ -56,21 +55,17 @@ jobs:
             --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
             --build-arg AWS_REGION=${{ secrets.AWS_REGION }} \
             -t scraper:latest -f apps/Scraper/Dockerfile .
-          docker tag scraper:latest ${{ secrets.OCI_REGION_KEY }}.ocir.io/${{ secrets.OCI_TENANCY_NS }}/scraper:latest
-      - name: Push Scraper Docker image
-        run: |
-          docker push ${{ secrets.OCI_REGION_KEY }}.ocir.io/${{ secrets.OCI_TENANCY_NS }}/scraper:latest
+          docker tag scraper:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/scraper:latest
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/scraper:latest
 
-      # Build "Web" app
+      # Build and push "Web" image
       - name: Build Web Docker image
         run: |
           docker build -t web:latest -f apps/web/Dockerfile .
-          docker tag web:latest ${{ secrets.OCI_REGION_KEY }}.ocir.io/${{ secrets.OCI_TENANCY_NS }}/web:latest
-      - name: Push Web Docker image
-        run: |
-          docker push ${{ secrets.OCI_REGION_KEY }}.ocir.io/${{ secrets.OCI_TENANCY_NS }}/web:latest
+          docker tag web:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/web:latest
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/web:latest
 
-      # Build "API" app
+      # Build and push "API" image
       - name: Build API Docker image
         run: |
           docker build \
@@ -79,12 +74,10 @@ jobs:
             --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
             --build-arg AWS_REGION=${{ secrets.AWS_REGION }} \
             -t api:latest -f apps/api/Dockerfile .
-          docker tag api:latest ${{ secrets.OCI_REGION_KEY }}.ocir.io/${{ secrets.OCI_TENANCY_NS }}/api:latest
-      - name: Push API Docker image
-        run: |
-          docker push ${{ secrets.OCI_REGION_KEY }}.ocir.io/${{ secrets.OCI_TENANCY_NS }}/api:latest
+          docker tag api:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/api:latest
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/api:latest
 
-      # Build "Extractor" app
+      # Build and push "Extractor" image
       - name: Build Extractor Docker image
         run: |
           docker build \
@@ -93,12 +86,10 @@ jobs:
             --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
             --build-arg AWS_REGION=${{ secrets.AWS_REGION }} \
             -t extractor:latest -f apps/Extractor/Dockerfile .
-          docker tag extractor:latest ${{ secrets.OCI_REGION_KEY }}.ocir.io/${{ secrets.OCI_TENANCY_NS }}/extractor:latest
-      - name: Push Extractor Docker image
-        run: |
-          docker push ${{ secrets.OCI_REGION_KEY }}.ocir.io/${{ secrets.OCI_TENANCY_NS }}/extractor:latest
+          docker tag extractor:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/extractor:latest
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/extractor:latest
 
-      # Build "Image" app
+      # Build and push "Image" image
       - name: Build Image Docker image
         run: |
           docker build \
@@ -107,19 +98,19 @@ jobs:
             --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
             --build-arg AWS_REGION=${{ secrets.AWS_REGION }} \
             -t image:latest -f apps/image/Dockerfile .
-          docker tag image:latest ${{ secrets.OCI_REGION_KEY }}.ocir.io/${{ secrets.OCI_TENANCY_NS }}/image:latest
-      - name: Push Image Docker image
-        run: |
-          docker push ${{ secrets.OCI_REGION_KEY }}.ocir.io/${{ secrets.OCI_TENANCY_NS }}/image:latest
+          docker tag image:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/image:latest
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/image:latest
 
-      # Configure kubectl for Oracle OKE
-      - name: Configure Kubectl for OKE
-        uses: oracle-actions/configure-kubectl-oke@v1.5.0
+      # Get GKE credentials and configure kubectl
+      - name: Get GKE Credentials
+        uses: google-github-actions/get-gke-credentials@v1
         with:
-          cluster: ${{ secrets.OKE_CLUSTER_OCID }}
+          cluster_name: ${{ secrets.GKE_CLUSTER_NAME }}
+          location: ${{ secrets.GKE_ZONE }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      # Deploy Kubernetes manifests to OKE (includes deployments, services, ingress, etc.)
-      - name: Deploy to OKE
+      # Deploy Kubernetes manifests to GKE
+      - name: Deploy to GKE
         run: |
           kubectl apply -f k8s/ --validate=false
           kubectl rollout status deployment/web-deployment --timeout=90s

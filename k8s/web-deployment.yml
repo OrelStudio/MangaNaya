@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: eu-frankfurt-1.ocir.io/friezpm0b3m4/web:latest
+        image: gcr.io/ornate-bond-345313/web:latest
         ports:
         - containerPort: 3000
 ---
