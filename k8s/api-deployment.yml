@@ -24,7 +24,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: web-service
+  name: api-service
   namespace: default
 spec:
   type: ClusterIP
@@ -33,4 +33,4 @@ spec:
     port: 443
     targetPort: 8080
   selector:
-    app: web
+    app: api
