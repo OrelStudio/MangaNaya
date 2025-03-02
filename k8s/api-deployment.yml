@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: gcr.io/ornate-bond-345313/api:latest
+        image: europe-west3-docker.pkg.dev/ornate-bond-345313/manganaya/api:latest
         ports:
         - containerPort: 8080
 ---

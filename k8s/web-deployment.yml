@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: gcr.io/ornate-bond-345313/web:latest
+        image: europe-west3-docker.pkg.dev/ornate-bond-345313/manganaya/web:latest
         ports:
         - containerPort: 3000
 ---
