@@ -1,4 +1,4 @@
-name: Build and Deploy to GKE
+name: Build and Deploy to GKE with Artifact Registry
 
 on:
   push:
@@ -36,8 +36,9 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           version: 'latest'
 
-      - name: Configure Docker to use gcloud as a credential helper
-        run: gcloud --quiet auth configure-docker
+      # Configure Docker to use gcloud as a credential helper for Artifact Registry
+      - name: Configure Docker for Artifact Registry
+        run: gcloud --quiet auth configure-docker us-central1-docker.pkg.dev
 
       - name: Automatic Tagging of Releases
         id: increment-git-tag
@@ -55,15 +56,15 @@ jobs:
             --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
             --build-arg AWS_REGION=${{ secrets.AWS_REGION }} \
             -t scraper:latest -f apps/Scraper/Dockerfile .
-          docker tag scraper:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/scraper:latest
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/scraper:latest
+          docker tag scraper:latest us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-apps/scraper:latest
+          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-apps/scraper:latest
 
       # Build and push "Web" image
       - name: Build Web Docker image
         run: |
           docker build -t web:latest -f apps/web/Dockerfile .
-          docker tag web:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/web:latest
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/web:latest
+          docker tag web:latest us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-apps/web:latest
+          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-apps/web:latest
 
       # Build and push "API" image
       - name: Build API Docker image
@@ -74,8 +75,8 @@ jobs:
             --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
             --build-arg AWS_REGION=${{ secrets.AWS_REGION }} \
             -t api:latest -f apps/api/Dockerfile .
-          docker tag api:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/api:latest
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/api:latest
+          docker tag api:latest us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-apps/api:latest
+          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-apps/api:latest
 
       # Build and push "Extractor" image
       - name: Build Extractor Docker image
@@ -86,8 +87,8 @@ jobs:
             --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
             --build-arg AWS_REGION=${{ secrets.AWS_REGION }} \
             -t extractor:latest -f apps/Extractor/Dockerfile .
-          docker tag extractor:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/extractor:latest
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/extractor:latest
+          docker tag extractor:latest us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-apps/extractor:latest
+          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-apps/extractor:latest
 
       # Build and push "Image" image
       - name: Build Image Docker image
@@ -98,8 +99,8 @@ jobs:
             --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
             --build-arg AWS_REGION=${{ secrets.AWS_REGION }} \
             -t image:latest -f apps/image/Dockerfile .
-          docker tag image:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/image:latest
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/image:latest
+          docker tag image:latest us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-apps/image:latest
+          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-apps/image:latest
 
       # Get GKE credentials and configure kubectl
       - name: Get GKE Credentials
