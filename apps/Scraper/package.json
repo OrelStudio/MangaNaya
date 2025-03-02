@@ -14,10 +14,10 @@
   "type": "module",
   "license": "ISC",
   "dependencies": {
-    "@types/amqplib": "^0.10.5",
+    "@types/amqplib": "0.10.6",
     "@types/jsdom": "^21.1.7",
     "@types/pg": "^8.11.10",
-    "amqplib": "^0.10.4",
+    "amqplib": "^0.10.5",
     "axios": "^1.7.7",
     "jsdom": "^25.0.0",
     "pg": "^8.13.0",

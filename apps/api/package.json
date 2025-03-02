@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@manga-naya/cache": "workspace:*",
+    "@types/amqplib": "0.10.6",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/lodash.omit": "^4.5.9",
     "@types/qs": "^6.9.18",
