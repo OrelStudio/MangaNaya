@@ -4,10 +4,15 @@ metadata:
   name: app-ingress
   namespace: default
   annotations:
-    kubernetes.io/ingress.class: "gce"
-    kubernetes.io/ingress.regional-static-ip-name: "manganaya-ip"
-    networking.gke.io/managed-certificates: "manganaya-cert"
+    kubernetes.io/ingress.class: "nginx"
 spec:
+  tls:
+  - hosts:
+    - manganaya.com
+    - www.manganaya.com
+    - api.manganaya.com
+    - img.manganaya.com
+    secretName: manganaya-tls
   rules:
   - host: manganaya.com
     http:

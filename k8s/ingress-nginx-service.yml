@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress-nginx
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.regional-static-ip-name: "nginx-ip"
+spec:
+  type: LoadBalancer
+  loadBalancerIP: "130.211.81.173"
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  - name: https
+    port: 443
+    targetPort: 443
+  selector:
+    app.kubernetes.io/name: ingress-nginx

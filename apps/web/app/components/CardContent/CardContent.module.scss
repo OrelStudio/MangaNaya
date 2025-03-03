@@ -4,7 +4,6 @@ $ring-shadow: 0 0 #0000;
 
 .card {
   box-shadow: ($ring-offset-shadow, 0 0 #0000), ($ring-shadow, 0 0 #0000), ($shadow);
-  background-color: hsl(0, 0%, 100%);
   border-width: 1px;
   border-radius: 0.75rem;
   padding: clamp(0.5rem, 2vw, 2rem);

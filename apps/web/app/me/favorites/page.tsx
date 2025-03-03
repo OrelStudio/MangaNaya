@@ -48,10 +48,6 @@ const GET_FAVORITES = (userId: number | null) => gql`
 const Favorites = ({user}: {user: UserType}) => {
   const {loading, error, data} = useQuery(GET_FAVORITES(user?.id || null))
 
-  if (error) {
-    return <div>Something went wrong</div>
-  }
-
   const mangas = useMemo(() => data ? data?.favorites.map((fav: FavType) => fav.manga) : null, [data])
 
   if (!mangas || loading) {

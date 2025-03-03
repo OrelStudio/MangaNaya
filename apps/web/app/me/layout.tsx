@@ -56,7 +56,7 @@ const LayoutPage = (props: LayoutPageProps & {user: UserType}) => {
   const {children, user} = props
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div></div>}>
       <Layout user={user}>
         {children}
       </Layout>
