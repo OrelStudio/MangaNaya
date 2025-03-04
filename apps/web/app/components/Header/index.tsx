@@ -15,10 +15,12 @@ import {
   StarFilled
 } from '../Icon'
 
+import useScrollHide from '../../hooks/useScrollHide'
+import getLogoutUrl from '../../utils/getLogoutUrl'
+
 import {UserType} from '@manga-naya/types'
 
 import styles from './Header.module.scss'
-import getLogoutUrl from '../../utils/getLogoutUrl'
 
 interface HeaderProps {
   user: UserType
@@ -26,6 +28,7 @@ interface HeaderProps {
 }
 
 const Header = ({user, page}: HeaderProps) => {
+  const scrollY = useScrollHide()
   const navItems = useMemo(() => [
     {
       page: 'explore',
@@ -106,7 +109,7 @@ const Header = ({user, page}: HeaderProps) => {
         <Link href='/'>MangaNaya</Link>
       </div>
 
-      <div className={styles.navigation}>
+      <div className={styles.navigation} style={{transform: `translateY(${(scrollY/2)}px)`}}>
         {navItems.map((item, i) => (
           <Link href={item.link} key={i}>
             <div className={`${styles.navItem} ${page === item.page ? styles.active : ''}`}>

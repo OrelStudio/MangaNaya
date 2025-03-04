@@ -110,6 +110,7 @@ const extractImages = async (
     const browser = await puppeteer.launch({headless: true})
     await new Promise((resolve) => setTimeout(resolve, 1000))
     const page = await browser.newPage()
+    await page.setJavaScriptEnabled(false)
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
     // Words to filter the images
@@ -136,7 +137,7 @@ const extractImages = async (
     })
 
     try {
-      await page.goto(link, {waitUntil: ['domcontentloaded', 'networkidle2'], timeout: 60000})
+      await page.goto(link, {waitUntil: ['domcontentloaded'], timeout: 60000})
       await new Promise((resolve) => setTimeout(resolve, 1000))
       await page.setViewport({ width: 62, height: 10000 })
       await new Promise((resolve) => setTimeout(resolve, 5000))

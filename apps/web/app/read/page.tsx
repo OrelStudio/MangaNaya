@@ -8,6 +8,8 @@ import useChapter from '../hooks/useChapter'
 import ChapterInfo from './ChapterInfo'
 import Header from '../components/Header'
 
+import useScrollDelta from '../hooks/useScrollDelta'
+
 import type {UserType} from '@manga-naya/types'
 
 import styles from './Read.module.scss'
