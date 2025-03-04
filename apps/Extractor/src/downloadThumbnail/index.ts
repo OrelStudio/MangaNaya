@@ -58,8 +58,10 @@ const download = async(link: string, linkToManga: string): Promise<ThumbnailType
 }
 
 const downloadThumbnail = async(link: string, mangaName: string, linkToManga: string): Promise<void> => {
-  console.log(`Downloading thumbnail for `, mangaName);
+  console.log(`Downloading thumbnail for `, mangaName)
   
+  await new Promise((resolve) => setTimeout(resolve, 5000)) // Wait for 5 seconds before downloading the thumbnail
+
   const isExist = await isThumbnailExist(mangaName)
 
   if (isExist) {

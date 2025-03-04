@@ -31,7 +31,7 @@ const isThumbnailExist = async (name: string): Promise<boolean> => {
 
     if (!manga) {
       // manga doesn't exist
-      throw new Error(`Manga with name '${name}' not found`)
+      return false
     }
 
     // if the manga's thumbnail is '', then it doesn't exist

@@ -105,6 +105,7 @@ const insertChapter = async (mangaName: string, chapterNumber: number, chapterLi
 
     if (mangaRes.rows.length === 0) {
       console.log(`Manga with name '${mangaName}' not found`)
+      return
     }
 
     const mangaId = mangaRes.rows[0].id
