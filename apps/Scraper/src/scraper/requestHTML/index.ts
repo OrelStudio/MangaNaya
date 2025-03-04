@@ -21,8 +21,9 @@ puppeteer.use(
 const requestHTML = async(url: string, headers: Record<string, string>): Promise<string> => {
   const browser = await puppeteer.launch({headless: true})
   const page = await browser.newPage()
+  await page.setJavaScriptEnabled(false)
   await page.setExtraHTTPHeaders(headers)
-  await page.goto(url, {waitUntil: 'networkidle2'})
+  await page.goto(url, {waitUntil: 'domcontentloaded'})
   const html = await page.content()
   await browser.close()
 
