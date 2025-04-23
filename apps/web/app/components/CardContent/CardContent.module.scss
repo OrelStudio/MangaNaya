@@ -6,13 +6,13 @@ $ring-shadow: 0 0 #0000;
   box-shadow: ($ring-offset-shadow, 0 0 #0000), ($ring-shadow, 0 0 #0000), ($shadow);
   border-width: 1px;
   border-radius: 0.75rem;
-  padding: clamp(0.5rem, 2vw, 2rem);
 }
 
 .content {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: flex-start;
 }
 
 .icon {
@@ -35,11 +35,11 @@ $ring-shadow: 0 0 #0000;
 }
 
 .title {
-  font-size: clamp(0.8rem, 2vw, 1.2rem);
+  font-size: clamp(0.5rem, 2vw, 1rem);
   font-weight: 700;
 }
 
 .value {
-  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  font-size: clamp(1rem, 2vw, 1.5rem);
   font-weight: 500;
 }
