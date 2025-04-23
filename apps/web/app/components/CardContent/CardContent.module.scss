@@ -21,6 +21,7 @@ $ring-shadow: 0 0 #0000;
   svg {
     // width: 2.5rem;
     // height: 2.5rem;
+    
     width: clamp(2rem, 4vw, 3rem);
     height: clamp(2rem, 4vw, 3rem);
   }
