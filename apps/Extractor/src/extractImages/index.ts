@@ -3,8 +3,12 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import AdBlockerPlugin from 'puppeteer-extra-plugin-adblocker'
 import {Page, DEFAULT_INTERCEPT_RESOLUTION_PRIORITY} from 'puppeteer'
 import axios from 'axios'
+import {getCachedSSMClient} from '@manga-naya/cache'
 
 import {PanelType} from '@manga-naya/types'
+
+const ssmClient = await getCachedSSMClient()
+const refererOne = await ssmClient.getSecureParameter('manganaya-refererOne')
 
 puppeteer.use(StealthPlugin())
 puppeteer.use(
@@ -16,7 +20,7 @@ puppeteer.use(
 )
 
 const sourcesInfo = {
-  kakalot: {
+  sourceOne: {
     images: '.container-chapter-reader img',
     header: {
       "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
@@ -30,11 +34,11 @@ const sourcesInfo = {
       "sec-fetch-dest": "image",
       "sec-fetch-mode": "no-cors",
       "sec-fetch-site": "cross-site",
-      "Referer": "https://chapmanganato.to/",
+      "Referer": refererOne,
       "Referrer-Policy": "strict-origin-when-cross-origin"    
     }
   },
-  mangagojo: {
+  sourceTwo: {
     images: '.readerarea img',
     header: {
       "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",

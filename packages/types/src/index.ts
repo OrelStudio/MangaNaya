@@ -14,7 +14,7 @@ import type {
   ForYouType,
 } from './UserType'
 
-type SourceType = 'kakalot' | 'mangagojo'
+type SourceType = 'sourceOne' | 'sourceTwo'
 
 export type {
   MangaTypeDB,
