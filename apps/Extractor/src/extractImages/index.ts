@@ -3,12 +3,13 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import AdBlockerPlugin from 'puppeteer-extra-plugin-adblocker'
 import {Page, DEFAULT_INTERCEPT_RESOLUTION_PRIORITY} from 'puppeteer'
 import axios from 'axios'
-import {getCachedSSMClient} from '@manga-naya/cache'
+import {getSSMClient} from '@manga-naya/cache'
 
 import {PanelType} from '@manga-naya/types'
 
-const ssmClient = await getCachedSSMClient()
-const refererOne = await ssmClient.getSecureParameter('manganaya-refererOne')
+const ssmClient = await getSSMClient()
+const refererOne = await ssmClient.client.getSecureParameter('manganaya-refererOne')
+await ssmClient.close()
 
 puppeteer.use(StealthPlugin())
 puppeteer.use(

@@ -88,6 +88,7 @@ export {
   getRedisClient,
 
   getCachedSSMClient,
+  getSSMClient,
 
   getCachedRabbitClient,
   getRabbitClient,
