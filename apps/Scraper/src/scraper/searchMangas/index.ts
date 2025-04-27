@@ -4,12 +4,12 @@ import requestHTML from '../requestHTML'
 // import {getSSMClient} from '@manga-naya/cache'
 import type {RedisType} from '@manga-naya/cache'
 
-const sourceOne = process.env.SOURCEONE
-const sourceTwo = process.env.SOURCETWO
+const sourceOne = `https://mangakakalot.gg/search/story`
+const sourceTwo = `https://mangagojo.com/page`
 
-if (!sourceOne || !sourceTwo) {
-  throw new Error('Failed to get environment variables')
-}
+// if (!sourceOne || !sourceTwo) {
+//   throw new Error('Failed to get environment variables')
+// }
 
 import {MangaItemType} from '@manga-naya/types'
 type MangaType = Omit<MangaItemType, 'genres' | 'description'> & { source: 'sourceOne' | 'sourceTwo' }
