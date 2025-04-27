@@ -1,84 +1,49 @@
-# Turborepo starter
+# [MangaNaya](https://manganaya.com)
 
-This Turborepo starter is maintained by the Turborepo core team.
+MangaNaya is a personal manga reading platform designed to provide a streamlined, ad-free, and customizable manga experience.
 
-## Using this example
+## Overview
 
-Run the following command:
+MangaNaya is a full-stack application built using a monorepo structure. It consists of multiple microservices that handle different responsibilities, providing an efficient and dynamic manga-reading platform.
 
-```sh
-npx create-turbo@latest
-```
+## Architecture
 
-## What's inside?
+The application is structured into distinct services, each performing dedicated tasks:
 
-This Turborepo includes the following packages/apps:
+- **Web**: Frontend application built with Next.js, serving as the user interface for reading manga and browsing the catalog.
+- **API**: A GraphQL backend built using Hono.js that serves as the central point for data fetching and manipulation.
+- **Scraper**: A dedicated service responsible for retrieving manga metadata dynamically as needed.
+- **Extractor**: Manages the downloading and storage of manga chapters and their thumbnails to AWS S3, on-demand.
 
-### Apps and Packages
+## Technology Stack
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- **Monorepo Management**: Turborepo with Bun as package manager
+- **Frontend Framework**: Next.js
+- **Backend Framework**: Hono.js
+- **API Layer**: GraphQL
+- **Containerization and Deployment**: Google Kubernetes Engine (GKE)
+- **Container Registry**: Google Artifact Registry
+- **Database**: AWS RDS (PostgreSQL)
+- **File Storage**: AWS S3
+- **Messaging**: AmazonMQ (RabbitMQ)
+- **Caching**: Redis
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+## Key Features
 
-### Utilities
+- **Dynamic Manga Catalog**: Manga metadata and chapters are fetched and stored dynamically upon user requests.
+- **On-Demand Chapter Loading**: Chapters are downloaded and cached seamlessly when a user requests to read them.
+- **Search Functionality**: Users can search within existing manga entries and request new entries dynamically.
+- **Scalable Queue System**: A reactive queue system manages resource-intensive tasks like chapter extraction efficiently.
 
-This Turborepo has some additional tools already setup for you:
+## Infrastructure
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+MangaNaya employs a modern cloud-native infrastructure designed for scalability and cost efficiency:
 
-### Build
+- Deployed via Continuous Integration and Continuous Deployment (CI/CD) pipelines to Google Kubernetes Engine (GKE).
+- Utilizes cloud-managed services from AWS and Google Cloud to ensure efficient performance and reliable data management.
 
-To build all apps and packages, run the following command:
+## Challenges and Solutions
 
-```
-cd my-turborepo
-pnpm build
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm dev
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+- **Dynamic Data Handling**: Initially faced challenges managing large pre-downloaded manga data; solved by dynamically loading manga and chapters on user demand.
+- **Resource Management**: High memory usage resolved by separating scraper and extractor services and implementing an efficient queuing system.
+- **Cloud Optimization**: Optimized deployment on cloud infrastructure to balance performance, reliability, and cost efficiency.
