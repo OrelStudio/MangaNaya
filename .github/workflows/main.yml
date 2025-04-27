@@ -54,6 +54,8 @@ jobs:
             --build-arg NODE_ENV=production \
             --build-arg AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
             --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+            --build-arg SOURCEONE=${{ secrets.SOURCEONE }} \
+            --build-arg SOURCETWO=${{ secrets.SOURCETWO }} \
             --build-arg AWS_REGION=${{ secrets.AWS_REGION }} \
             -t scraper:latest -f apps/Scraper/Dockerfile .
           docker tag scraper:latest europe-west3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/manganaya/scraper:latest

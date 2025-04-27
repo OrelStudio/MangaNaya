@@ -3,13 +3,13 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import AdBlockerPlugin from 'puppeteer-extra-plugin-adblocker'
 import {Page, DEFAULT_INTERCEPT_RESOLUTION_PRIORITY} from 'puppeteer'
 import axios from 'axios'
-import {getSSMClient} from '@manga-naya/cache'
+// import {getSSMClient} from '@manga-naya/cache'
 
 import {PanelType} from '@manga-naya/types'
 
-const ssmClient = await getSSMClient()
-const refererOne = await ssmClient.client.getSecureParameter('manganaya-refererOne')
-await ssmClient.close()
+// const ssmClient = await getSSMClient()
+// const refererOne = await ssmClient.client.getSecureParameter('manganaya-refererOne')
+// await ssmClient.close()
 
 puppeteer.use(StealthPlugin())
 puppeteer.use(
@@ -35,7 +35,7 @@ const sourcesInfo = {
       "sec-fetch-dest": "image",
       "sec-fetch-mode": "no-cors",
       "sec-fetch-site": "cross-site",
-      "Referer": refererOne,
+      // "Referer": refererOne,
       "Referrer-Policy": "strict-origin-when-cross-origin"    
     }
   },
@@ -62,25 +62,6 @@ const sourcesInfo = {
 
 type SourceType = keyof typeof sourcesInfo
 
-const downloadImages = async(source: SourceType, urls: string[]): Promise<PanelType[]> => {
-  return await urls.reduce<Promise<PanelType[]>>(async(acc, url) => {
-    const accumulator = await acc
-    const response = await axios.get(url, {
-      headers: sourcesInfo[source].header,
-      responseType: 'arraybuffer'
-    }).then((res) => Buffer.from(res.data, 'binary'))
-
-    const filename = url.split('/').pop()!
-
-    const result: PanelType = {
-      filename: filename,
-      buffer: response
-    }
-
-    return [...accumulator, result]
-  }, Promise.resolve([]))
-}
-
 const extract = async(page: Page, words: string[]) => {
   // Setting the web view height to 10000 and width to 62 to fit all the images, avoiding lazy loading
   // await page.setViewport({width: 62, height: 10000})
@@ -105,9 +86,7 @@ const extract = async(page: Page, words: string[]) => {
 }
 
 const extractImages = async (
-  source: SourceType,
   link: string,
-  name: string,
   chapter: number
 ): Promise<PanelType[]> => {
   try {

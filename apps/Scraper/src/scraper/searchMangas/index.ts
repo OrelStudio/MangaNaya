@@ -1,13 +1,11 @@
 import {JSDOM} from 'jsdom'
 import getHeaders from '../headers/getHeaders'
 import requestHTML from '../requestHTML'
-import {getSSMClient} from '@manga-naya/cache'
+// import {getSSMClient} from '@manga-naya/cache'
 import type {RedisType} from '@manga-naya/cache'
 
-const ssmClient = await getSSMClient()
-const sourceOne = await ssmClient.client.getSecureParameter('manganaya-sourceOne')
-const sourceTwo = await ssmClient.client.getSecureParameter('manganaya-sourceTwo')
-await ssmClient.close()
+const sourceOne = process.env.SOURCEONE
+const sourceTwo = process.env.SOURCETWO
 
 import {MangaItemType} from '@manga-naya/types'
 type MangaType = Omit<MangaItemType, 'genres' | 'description'> & { source: 'sourceOne' | 'sourceTwo' }
