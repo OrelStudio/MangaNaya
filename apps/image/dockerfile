@@ -19,10 +19,7 @@
   # Stage 2: Runtime
   # ----------------------
   FROM oven/bun:1 AS runtime
-  RUN addgroup --system --gid 1001 nodejs && \
-      adduser --system --uid 1001 nextjs
   
-  USER nextjs
   WORKDIR /app
   # ENV NODE_ENV=production
   ARG NODE_ENV

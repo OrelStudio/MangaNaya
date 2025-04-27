@@ -61,10 +61,7 @@
   wget \
   xdg-utils \
   --no-install-recommends && rm -rf /var/lib/apt/lists/*
-  RUN addgroup --system --gid 1001 nodejs && \
-      adduser --system --uid 1001 nextjs
-  
-  USER nextjs
+
   WORKDIR /app
   # ENV NODE_ENV=production
   ARG NODE_ENV
@@ -85,7 +82,7 @@
   # 3) IMPORTANT: Copy the local packages so symlinks aren't broken
   COPY --from=builder /app/packages ./packages
 
-  COPY --from=builder /root/.cache/puppeteer /home/nextjs/.cache/puppeteer
+  COPY --from=builder /root/.cache/puppeteer /root/.cache/puppeteer
   
   EXPOSE 3000
   CMD ["bun", "run", "./dist/index.js"]
