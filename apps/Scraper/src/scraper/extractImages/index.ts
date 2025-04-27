@@ -1,19 +1,7 @@
-import puppeteer from 'puppeteer-extra'
-import StealthPlugin from 'puppeteer-extra-plugin-stealth'
-import AdBlockerPlugin from 'puppeteer-extra-plugin-adblocker'
-import {Page, DEFAULT_INTERCEPT_RESOLUTION_PRIORITY} from 'puppeteer'
+import puppeteer, {Page} from 'puppeteer'
 import axios from 'axios'
 
 import {PanelType} from '@manga-naya/types'
-
-puppeteer.use(StealthPlugin())
-puppeteer.use(
-  AdBlockerPlugin({
-    // Optionally enable Cooperative Mode for several request interceptors
-    interceptResolutionPriority: DEFAULT_INTERCEPT_RESOLUTION_PRIORITY,
-    blockTrackers: true,
-  })
-)
 
 const sourcesInfo = {
   kakalot: {
@@ -78,7 +66,7 @@ const downloadImages = async(source: SourceType, urls: string[]): Promise<PanelT
 
 const extract = async(page: Page, words: string[]) => {
   // Setting the web view height to 10000 and width to 62 to fit all the images, avoiding lazy loading
-  // await page.setViewport({width: 62, height: 10000})
+  await page.setViewport({width: 62, height: 10000})
 
   // Extracting images
   // '.container-chapter-reader' is the container for the images
@@ -99,79 +87,30 @@ const extract = async(page: Page, words: string[]) => {
   return filteredImages
 }
 
-const extractImages = async (
-  source: SourceType,
-  link: string,
-  name: string,
-  chapter: number
-): Promise<PanelType[]> => {
+const extractImages = async(source: SourceType, links: string, name: string, chapter: number): Promise<PanelType[]> => {
   try {
-    console.log(`Extracting images from ${link}`)
-    const browser = await puppeteer.launch({headless: true})
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    const browser = await puppeteer.launch()
+
+    const words = ['chapter', name, `${chapter}`]
+
     const page = await browser.newPage()
-    await page.setJavaScriptEnabled(false)
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    await page.goto(links)
+    // Extract images
+    const imagesLinks = await extract(page, words)
+    await page.close()
+    await browser.close()
+    // Download images
+    const images = await downloadImages(source, imagesLinks)
 
-    // Words to filter the images
-    const words = ['chapter', `${chapter}`]
-
-    const urlToImageMap: Record<string, PanelType> = {}
-
-    // Set up a response handler to capture image responses
-    page.on('response', async (response) => {
-      try {
-        if (response.request().resourceType() === 'image') {
-          const url = response.url()
-          const includeImage = words.some((word) => word && url.includes(word))
-
-          if (includeImage) {
-            const buffer = await response.buffer()
-            const filename = url.split('/').pop()!
-            urlToImageMap[url] = { filename, buffer }
-          }
-        }
-      } catch (error) {
-        console.log(`Error processing response for ${response.url()}`, error)
-      }
-    })
-
-    try {
-      await page.goto(link, {waitUntil: ['domcontentloaded'], timeout: 60000})
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      await page.setViewport({ width: 62, height: 10000 })
-      await new Promise((resolve) => setTimeout(resolve, 5000))
-
-      // Wait for all images to load
-      await page.waitForSelector('img')
-
-      const domOrderedUrls = await extract(page, words)
-
-      // Pause execution for 5 seconds to allow images to load
-      await new Promise((resolve) => setTimeout(resolve, 5000))
-
-      const finalImages: PanelType[] = domOrderedUrls.map((domUrl) => urlToImageMap[domUrl]).filter((img) => !!img) as PanelType[]
-
-      await page.close()
-      await browser.close()
-
-      if (finalImages.length === 0) {
-        throw new Error(`Failed to extract images from the page, url: ${link}`)
-      }
-
-      console.log(`Extracted ${finalImages.length} images from ${link}`)
-      return finalImages
-    } catch (error) {
-      console.log(`Failed to extract images from the page, url: ${link}`, error)
-      await page.close()
-      await browser.close()
-      throw new Error('Failed')
+    if (images.length === 0) {
+      throw new Error(`Failed to extract images from the page, url: ${links}`)
     }
+
+    return images
   } catch (error) {
-    console.log(`Failed to launch puppeteer`, error)
-    throw new Error('Failed')
+    console.log(`Failed to extract images from the page, url: ${links}`, error)
+    return []
   }
 }
 
-export {extract}
 export default extractImages

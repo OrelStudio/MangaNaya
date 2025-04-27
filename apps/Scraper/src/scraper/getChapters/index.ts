@@ -9,21 +9,21 @@ interface ChapterType extends ChapterResultsType {
 }
 
 const sourcesInfo = {
-  sourceOne: {
+  kakalot: {
     chapters: '.chapter-list .row',
     link: 'a',
     item: 'a',
     genres: 'li.genres a',
     description: '#contentBox',
   },
-  sourceTwo: {
+  mangagojo: {
     chapters: '.eplister ul li div div',
     link: 'a',
     item: '.chapternum',
     genres: '.info-desc a',
     description: '.info-desc p',
   },
-  sourceThree: {
+  chapmanganato: {
     chapters: '.row-content-chapter li',
     link: 'a',
     item: 'a',
@@ -45,7 +45,7 @@ const getChapters = (source: SourceType, link: string): Promise<ChapterType[]> =
     
     const genres = genresE.map(genre => genre.textContent ? genre.textContent.trim() : null).filter((text): text is string => text !== null)
     
-    const description = source === 'sourceOne' ? (
+    const description = source === 'kakalot' ? (
       (descriptionE?.textContent?.split('summary:')[1].trim() ?? '')
     ) : (
       (descriptionE?.textContent?.trim() ?? '')

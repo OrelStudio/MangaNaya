@@ -1,28 +1,26 @@
 import {JSDOM} from 'jsdom'
 import getHeaders from '../headers/getHeaders'
 import requestHTML from '../requestHTML'
-// import {getSSMClient} from '@manga-naya/cache'
+import {getCachedRedisClient} from '@manga-naya/cache'
 import type {RedisType} from '@manga-naya/cache'
 
-const sourceOne = `https://mangakakalot.gg/search/story`
-const sourceTwo = `https://mangagojo.com/page`
-
-// if (!sourceOne || !sourceTwo) {
-//   throw new Error('Failed to get environment variables')
-// }
-
 import {MangaItemType} from '@manga-naya/types'
-type MangaType = Omit<MangaItemType, 'genres' | 'description'> & { source: 'sourceOne' | 'sourceTwo' }
+type MangaType = Omit<MangaItemType, 'genres' | 'description'> & { source: 'kakalot' | 'mangagojo' }
+// https://mangakakalot.com/manga_list?type=topview&category=42&state=all&page=
+// https://mangakakalot.com/manga_list?type=topview&category=all&state=all&page=
+// https://mangakakalot.com/manga_list?type=topview&category=33&state=all&page=
+// https://mangakakalot.com/manga_list?type=topview&category=9&state=all&page=
+// https://mangakakalot.com/manga_list?type=topview&category=20&state=all&page=
 
 const sourcesInfo = {
-  sourceOne: {
-    url: (query: string, page: number) => `${sourceOne}/${query}?page=${page}`,
+  kakalot: {
+    url: (query: string, page: number) => `https://mangakakalot.gg/search/story/${query}?page=${page}`,
     items: '.story_item',
     title: '.story_name a',
     thumbnail: 'img'
   },
-  sourceTwo: {
-    url: (query: string, page: number) => `${sourceTwo}/${page}/?s=${query}`,
+  mangagojo: {
+    url: (query: string, page: number) => `https://mangagojo.com/page/${page}/?s=${query}`,
     items: '.bs',
     title: '.tt',
     thumbnail: 'img'
@@ -54,7 +52,7 @@ const searchMangas = (source: SourceType, query: string, page: number): Promise<
         `)
       }
 
-      const link = source === 'sourceOne' ? (title as HTMLAnchorElement).href : item.querySelector('a')!.href as string
+      const link = source === 'kakalot' ? (title as HTMLAnchorElement).href : item.querySelector('a')!.href as string
 
       const mangaItem: MangaType = {
         name: title.textContent.trim(),
@@ -71,12 +69,12 @@ const searchMangas = (source: SourceType, query: string, page: number): Promise<
 }
 
 const search = async (query: string, page: number, redisClient: RedisType): Promise<MangaType[]> => {
-  const mangasOne = await searchMangas('sourceOne', query, page)
-  const mangasMangaTwo = await searchMangas('sourceTwo', query, page)
+  const mangasKakalot = await searchMangas('kakalot', query, page)
+  const mangasMangagojo = await searchMangas('mangagojo', query, page)
 
   // Merge the two arrays without duplicates based on the manga name
-  const mangas = mangasOne.concat(mangasMangaTwo.filter(manga => {
-    return !mangasOne.some(mangaOne => mangaOne.name === manga.name)
+  const mangas = mangasKakalot.concat(mangasMangagojo.filter(manga => {
+    return !mangasKakalot.some(mangaKakalot => mangaKakalot.name === manga.name)
   }))
 
   if (mangas.length === 0) {
